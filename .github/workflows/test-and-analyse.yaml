@@ -16,4 +16,46 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-restore
+        run: |
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            dotnet test --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
+           else
+            dotnet test --no-restore
+          fi
+        shell: bash
+      - name: Move coverage files to a known location
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          mkdir ${{github.workspace}}/coverage
+          mv $(find . -name "*coverage.cobertura.xml") ${{github.workspace}}/coverage/coverage.cobertura.xml
+          mv $(find . -name "*coverage.info") ${{github.workspace}}/coverage/coverage.info
+      - name: Cache coverage
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/coverage
+          key: ${{ github.sha }}-coverage
+  upload-coverage:
+    needs: build-and-test
+    name: Upload coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Restore coverage from cache
+        uses: actions/cache@v2
+        with:
+          path: ${{github.workspace}}/coverage
+          key: ${{ github.sha }}-coverage
+      - name: Publish code coverage to CodeClimate
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
+        with:
+          coverageLocations: |
+            ${{github.workspace}}/coverage/coverage.cobertura.xml:cobertura
+      - name: Publish code coverage to Coveralls
+        uses: coverallsapp/github-action@v1.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: ${{github.workspace}}/coverage/coverage.info
