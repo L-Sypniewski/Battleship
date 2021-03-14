@@ -2,5 +2,5 @@
 
 namespace Core.Model
 {
-    public sealed record Board((int height, int width) Size, IReadOnlyCollection<Ship> Ships);
+    public sealed record Board(BoardSize Size, IReadOnlyCollection<Ship> Ships);
 }
