@@ -17,7 +17,7 @@ namespace CoreTests.Services
         }
 
 
-        [Theory]
+        [Theory (DisplayName = "All ships are placed on a board")]
         [MemberData(nameof(PlacingShipsTestData))]
         public void All_ships_are_placed_on_board(ISet<ShipConfiguration> shipConfigurations, int expectedNumberOfPlacedShips)
         {
