@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 
 namespace Core.Model
 {
-    public sealed record Board(BoardSize Size, IReadOnlyCollection<Ship> Ships);
+    public sealed record Board(BoardSize Size, IImmutableList<Ship> Ships);
 }
