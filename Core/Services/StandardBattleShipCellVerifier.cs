@@ -19,17 +19,30 @@ namespace Core.Services
 
             if (!allCellsAreOnXAxis && !allCellsAreOnYAxis) return false;
 
-            if (allCellsAreOnXAxis)
-            {
-                var allYCoordinates = cellsArray.Select(cell => cell.YCoordinate).OrderBy(y => y).ToArray();
-                var yCoordinatesCount = allYCoordinates.Length;
-                var areAdjacent = allYCoordinates.Last() - allYCoordinates.First() == yCoordinatesCount - 1;
-                return areAdjacent;
-            }
+            return allCellsAreOnXAxis
+                ? AreAllYCoordinatesAdjacent(cellsArray)
+                : AreAllXCoordinatesAdjacent(cellsArray);
+        }
 
-            var allXCoordinates = cellsArray.Select(cell => cell.XCoordinate).OrderBy(x => x).ToArray();
-            var xCoordinatesCount = allXCoordinates.Length;
-            return allXCoordinates.Last() - allXCoordinates.First() == xCoordinatesCount - 1;
+
+        private static bool AreIntegersAdjacent(IEnumerable<int> integers)
+        {
+            var sortedIntegers = integers.OrderBy(i => i).ToArray();
+            return sortedIntegers.Last() - sortedIntegers.First() == sortedIntegers.Length - 1;
+        }
+
+
+        private static bool AreAllYCoordinatesAdjacent(IEnumerable<Cell> cells)
+        {
+            var allYCoordinates = cells.Select(cell => cell.YCoordinate);
+            return AreIntegersAdjacent(allYCoordinates);
+        }
+
+
+        private static bool AreAllXCoordinatesAdjacent(IEnumerable<Cell> cells)
+        {
+            var allXCoordinates = cells.Select(cell => cell.XCoordinate);
+            return AreIntegersAdjacent(allXCoordinates);
         }
     }
 }
