@@ -18,7 +18,7 @@ jobs:
       - name: Test
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            dotnet test --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov
+            dotnet test --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Model/*.cs"  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SkipAutoProps="True"
            else
             dotnet test --no-restore
           fi
