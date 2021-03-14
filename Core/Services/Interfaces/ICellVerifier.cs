@@ -5,6 +5,6 @@ namespace Core.Services
 {
     public interface ICellVerifier
     {
-        bool AllCellsAdjacent(IEnumerable<Cell> cells);
+        bool Verify(IEnumerable<Cell> cells);
     }
 }
