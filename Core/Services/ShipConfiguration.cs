@@ -11,5 +11,6 @@ namespace Core.Model
         public override int GetHashCode() => ShipSize.GetHashCode();
 
         public bool Equals(ShipConfiguration? other) => ShipSize.Equals(other?.ShipSize);
+
     }
 }
