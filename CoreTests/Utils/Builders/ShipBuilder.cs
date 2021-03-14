@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Immutable;
 using Core.Model;
 
 namespace CoreTests.Utils
@@ -25,7 +26,7 @@ namespace CoreTests.Utils
 
         public Ship Build()
         {
-            return new Ship(_name, _cells);
+            return new(_name, _cells.ToImmutableList());
         }
     }
 }

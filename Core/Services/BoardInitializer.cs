@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -12,7 +11,7 @@ namespace Core.Services
         {
             var shipsNumber = shipConfigurations.Sum(x => x.ShipsNumber);
 
-            var emptyShip = new Ship("", Array.Empty<Cell>());
+            var emptyShip = new Ship("", Enumerable.Empty<Cell>().ToImmutableList());
             return new Board(boardSize, Enumerable.Repeat(emptyShip, shipsNumber).ToImmutableList());
         }
     }
