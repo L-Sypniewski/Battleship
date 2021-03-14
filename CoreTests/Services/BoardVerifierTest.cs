@@ -68,8 +68,7 @@ namespace CoreTests.Services
 
         [Theory(DisplayName = "BoardVerifier correctly verifies if Ships are within bounds of a Board")]
         [ClassData(typeof(ShipsWithinBoardBoundsCoordinatesClassData))]
-        public void BoardVerifier_correctly_throws_exception_if_any_of_the_Ships_has_negative_coordinates(Board board,
-            bool expectedResult)
+        public void BoardVerifier_correctly_verifies_if_Ships_are_within_bounds_of_a_Board(Board board, bool expectedResult)
         {
             _sut.ShipsAreWithinBounds(board).Should().Be(expectedResult);
         }
