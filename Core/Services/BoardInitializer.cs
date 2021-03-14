@@ -5,7 +5,7 @@ using Core.Model;
 
 namespace Core.Services
 {
-    public class BoardInitializer : IBoardInitializer
+    public sealed class BoardInitializer : IBoardInitializer
     {
         public Board InitializedBoard(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations)
         {
