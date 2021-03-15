@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\CoreTests.csproj", "{C693928B-373D-4BBE-A0E7-7AEAABB688DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleBattleships", "ConsoleBattleships\ConsoleBattleships.csproj", "{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,5 +46,17 @@ Global
 		{C693928B-373D-4BBE-A0E7-7AEAABB688DB}.Release|x64.Build.0 = Release|Any CPU
 		{C693928B-373D-4BBE-A0E7-7AEAABB688DB}.Release|x86.ActiveCfg = Release|Any CPU
 		{C693928B-373D-4BBE-A0E7-7AEAABB688DB}.Release|x86.Build.0 = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|x64.Build.0 = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Debug|x86.Build.0 = Debug|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x64.ActiveCfg = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x64.Build.0 = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x86.ActiveCfg = Release|Any CPU
+		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
