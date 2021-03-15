@@ -46,7 +46,7 @@ namespace Core.Services
             {
                 throw new CannotMakeOutOfBoundsShotException();
             }
-            
+
             var shotShip = ShotShip(board, cell);
             var updatedBoard = UpdatedBoard(board, cell);
             return new GameMoveResult(updatedBoard, shotShip);
@@ -90,6 +90,13 @@ namespace Core.Services
             var cellsFromShipToShot = shipWithCellToShot.Cells;
 
             var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cellToShot);
+
+            var cellToShotAlreadyShot = cellsFromShipToShot[indexOfCellToRemove].IsShot;
+            if (cellToShotAlreadyShot)
+            {
+                throw new CannotShotAlreadyShotCellException();
+            }
+
             var cellsWithRemovedCellToShoot = cellsFromShipToShot.Remove(cellToShot);
 
             return cellsWithRemovedCellToShoot.Insert(indexOfCellToRemove, cellToShot with {IsShot = true});
