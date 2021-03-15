@@ -17,9 +17,23 @@ namespace CoreTests.Services
         }
 
 
-        [Theory (DisplayName = "All ships are placed on a board")]
+        [Theory(DisplayName = "All ships are placed on a board")]
         [MemberData(nameof(PlacingShipsTestData))]
         public void All_ships_are_placed_on_board(ISet<ShipConfiguration> shipConfigurations, int expectedNumberOfPlacedShips)
+        {
+            BoardSize boardSize = new(0, 0);
+
+            var initializedBoard = _sut.InitializedBoard(boardSize, shipConfigurations);
+
+            initializedBoard.Ships.Should().HaveCount(expectedNumberOfPlacedShips,
+                                                      "number of placed ships should equal a sum of ships from shipConfigurations");
+        }
+
+
+        [Theory(DisplayName = "Ships positions are determined by IShipPositioner")]
+        [MemberData(nameof(PlacingShipsTestData))]
+        public void Ships_positions_are_determined_by_IShipPositioner(ISet<ShipConfiguration> shipConfigurations,
+                                                                      int expectedNumberOfPlacedShips)
         {
             BoardSize boardSize = new(0, 0);
 
