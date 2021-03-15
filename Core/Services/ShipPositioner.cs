@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Core.Model;
 
 namespace Core.Services
@@ -24,24 +25,22 @@ namespace Core.Services
         {
             var firstCell = _cellRandomizer.GetCellWithin(board.Size);
             var orientation = _shipOrientationRandomizer.GetOrientation();
-            var shipPositions = new List<Cell>(shipSize);
 
+            var shipPositions = PositionsFor(orientation, firstCell, shipSize);
+            return shipPositions;
+        }
+
+
+        private static Cell[] PositionsFor(ShipOrientation orientation, Cell firstCell, int shipSize)
+        {
             if (orientation == ShipOrientation.Horizontal)
             {
-                for (var i = firstCell.XCoordinate; i < firstCell.XCoordinate + shipSize; i++)
-                {
-                    shipPositions.Add(new Cell(i, firstCell.YCoordinate, false));
-                }
-
-                return shipPositions;
+                var xCoordinates = Enumerable.Range(firstCell.XCoordinate, shipSize);
+                return xCoordinates.Select(x => new Cell(x, firstCell.YCoordinate, false)).ToArray();
             }
 
-            for (var i = firstCell.YCoordinate; i < firstCell.YCoordinate + shipSize; i++)
-            {
-                shipPositions.Add(new Cell(firstCell.XCoordinate, i, false));
-            }
-
-            return shipPositions;
+            var yCoordinates = Enumerable.Range(firstCell.YCoordinate, shipSize);
+            return yCoordinates.Select(y => new Cell(firstCell.XCoordinate, y, false)).ToArray();
         }
     }
 }
