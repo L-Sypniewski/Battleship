@@ -5,7 +5,7 @@ using CoreTests.Utils;
 
 namespace CoreTests.TestData.Services.ShipPositioner
 {
-    public class PositiningShipsHorizontallyClassData : IEnumerable<object[]>
+    public class PositioningShipsHorizontallyClassData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
