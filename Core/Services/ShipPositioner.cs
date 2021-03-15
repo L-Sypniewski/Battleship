@@ -9,20 +9,20 @@ namespace Core.Services
     public sealed class ShipPositioner : IShipPositioner
     {
         private readonly IBoardVerifier _boardVerifier;
-        private readonly ICellVerifier _cellVerifier;
+        private readonly IGameRulesCellVerifier _gameRulesCellVerifier;
         private readonly ICellRandomizer _cellRandomizer;
         private readonly int _maxAttempts;
         private readonly IShipOrientationRandomizer _shipOrientationRandomizer;
 
 
         public ShipPositioner(int maxAttempts, IShipOrientationRandomizer shipOrientationRandomizer,
-                              ICellRandomizer cellRandomizer, IBoardVerifier boardVerifier, ICellVerifier cellVerifier)
+                              ICellRandomizer cellRandomizer, IBoardVerifier boardVerifier, IGameRulesCellVerifier gameRulesCellVerifier)
         {
             _maxAttempts = Math.Max(1, maxAttempts);
             _shipOrientationRandomizer = shipOrientationRandomizer;
             _cellRandomizer = cellRandomizer;
             _boardVerifier = boardVerifier;
-            _cellVerifier = cellVerifier;
+            _gameRulesCellVerifier = gameRulesCellVerifier;
         }
 
 
@@ -37,7 +37,7 @@ namespace Core.Services
                 var shipPositions = PositionsFor(orientation, firstCell, shipSize);
 
 
-                var cellsPassedVerification = VerifyCells(shipPositions, board.Size, _boardVerifier, _cellVerifier);
+                var cellsPassedVerification = VerifyCells(shipPositions, board.Size, _boardVerifier, _gameRulesCellVerifier);
                 if (cellsPassedVerification)
                 {
                     return shipPositions;
@@ -51,7 +51,7 @@ namespace Core.Services
 
 
         private static bool VerifyCells(IEnumerable<Cell> cells, BoardSize boardSize,
-                                        IBoardVerifier boardVerifier, ICellVerifier cellVerifier)
+                                        IBoardVerifier boardVerifier, IGameRulesCellVerifier gameRulesCellVerifier)
         {
             var shipPositions = cells.ToArray();
             var cellsAreWithinBoardBounds = boardVerifier.CellsAreWithinBounds(boardSize, shipPositions);
@@ -60,7 +60,7 @@ namespace Core.Services
                 return false;
             }
 
-            var cellsAreCorrectlyCreated = cellVerifier.Verify(shipPositions);
+            var cellsAreCorrectlyCreated = gameRulesCellVerifier.Verify(shipPositions);
             return cellsAreCorrectlyCreated;
         }
 
