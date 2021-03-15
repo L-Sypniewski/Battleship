@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Core.Exceptions;
 using Core.Model;
 using Core.Services;
 using CoreTests.TestData.Services.BoardVerifier.BoardInitializer;
@@ -103,7 +104,7 @@ namespace CoreTests.Services
             const int numberOfFailedVerifications = 4;
             const int maxAttempts = numberOfFailedVerifications + 1;
             _sut = CreateSut(maxAttempts);
-            
+
             SetupShipPositionerToReturn(Array.Empty<Cell>());
             _cellVerifier.SetupSequence(mock => mock.CellsIntersect(It.IsAny<IEnumerable<Cell>>()))
                          .Returns(true)
@@ -124,6 +125,25 @@ namespace CoreTests.Services
                                    Times.Exactly(expectedNumberOfServiceCalls));
             _cellVerifier.Verify(mock => mock.CellsIntersect(It.IsAny<IEnumerable<Cell>>()),
                                  Times.Exactly(expectedNumberOfServiceCalls));
+        }
+
+
+        [Fact(DisplayName = "CannotInitializeBoardException is thrown if IShipPositioner throws")]
+        public void CannotInitializeBoardException_is_thrown_if_IShipPositioner_throws()
+        {
+            _shipPositioner.Setup(mock => mock.ShipPositionsFor(It.IsAny<Board>(), It.IsAny<int>()))
+                           .Throws<CannotCreateShipPositionsException>();
+            SetupCellIntersectionVerifierToReturn(false);
+
+            var shipConfiguration = new ShipConfigurationBuilder().WithShipsNumber(1).Build();
+            BoardSize boardSize = new(0, 0);
+
+
+            Action act = () => _sut.InitializedBoard(boardSize, new HashSet<ShipConfiguration>(new[] {shipConfiguration}));
+
+
+            act.Should().Throw<CannotInitializeBoardException>(
+                "if Ship positions cannot be created then Board cannot be initialized");
         }
     }
 }
