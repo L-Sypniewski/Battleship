@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Core.Exceptions;
 using Core.Model;
 
 namespace Core.Services
@@ -9,17 +10,18 @@ namespace Core.Services
     public sealed class Game : IGame
     {
         private readonly IBoardInitializer _boardInitializer;
+        private readonly IBoardVerifier _boardVerifier;
         private readonly BoardSize _boardSize;
         private readonly ISet<ShipConfiguration> _shipConfigurations;
 
 
-        public Game(BoardSize boardSize,
-                    ISet<ShipConfiguration> shipConfigurations,
-                    IBoardInitializer boardInitializer)
+        public Game(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations,
+                    IBoardInitializer boardInitializer, IBoardVerifier boardVerifier)
         {
             _boardSize = boardSize;
             _shipConfigurations = shipConfigurations;
             _boardInitializer = boardInitializer;
+            _boardVerifier = boardVerifier;
         }
 
 
@@ -39,6 +41,12 @@ namespace Core.Services
 
         public GameMoveResult ShootAt(Board board, Cell cell)
         {
+            var cellIsOutOfBounds = !_boardVerifier.CellsAreWithinBounds(board.Size, new[] {cell});
+            if (cellIsOutOfBounds)
+            {
+                throw new CannotMakeOutOfBoundsShotException();
+            }
+            
             var shotShip = ShotShip(board, cell);
             var updatedBoard = UpdatedBoard(board, cell);
             return new GameMoveResult(updatedBoard, shotShip);
