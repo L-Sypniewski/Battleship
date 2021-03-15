@@ -7,7 +7,7 @@ namespace CoreTests.Utils
 {
     public class BoardBuilder
     {
-        private BoardSize _boardSize = new(0, 0);
+        private BoardSize _boardSize = new(1, 1);
         private ImmutableArray<Ship> _ships = Enumerable.Empty<Ship>().ToImmutableArray();
 
 
