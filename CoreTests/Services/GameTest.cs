@@ -13,9 +13,9 @@ namespace CoreTests.Services
 {
     public class GameTest
     {
-        private readonly Game _sut;
         private readonly Mock<IBoardInitializer> _boardInitializer = new();
         private readonly Mock<IBoardVerifier> _boardVerifier = new();
+        private readonly Game _sut;
 
 
         public GameTest()
@@ -24,7 +24,7 @@ namespace CoreTests.Services
             var shipConfiguration = new ShipConfigurationBuilder().Build();
             var shipConfigurations = new HashSet<ShipConfiguration>(new[] {shipConfiguration});
             _sut = CreateSut(boardSize, shipConfigurations);
-            
+
             SetupBoardVerifierBoundsCheckToReturn(true);
         }
 
@@ -103,8 +103,8 @@ namespace CoreTests.Services
             SetupBoardVerifierBoundsCheckToReturn(false);
             var initialBoard = new BoardBuilder().Build();
             var cellToShot = new CellBuilder().Build();
-            
-            
+
+
             Action act = () => _sut.ShootAt(initialBoard, cellToShot);
 
 

@@ -32,7 +32,7 @@ namespace CoreTests.Utils
 
         public Cell Build()
         {
-            return new Cell(_xCoordinate, _yCoordinate, _isShot);
+            return new(_xCoordinate, _yCoordinate, _isShot);
         }
     }
 }

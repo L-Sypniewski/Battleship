@@ -9,14 +9,15 @@ namespace Core.Services
     public sealed class ShipPositioner : IShipPositioner
     {
         private readonly IBoardVerifier _boardVerifier;
-        private readonly IGameRulesCellVerifier _gameRulesCellVerifier;
         private readonly ICellRandomizer _cellRandomizer;
+        private readonly IGameRulesCellVerifier _gameRulesCellVerifier;
         private readonly int _maxAttempts;
         private readonly IShipOrientationRandomizer _shipOrientationRandomizer;
 
 
         public ShipPositioner(int maxAttempts, IShipOrientationRandomizer shipOrientationRandomizer,
-                              ICellRandomizer cellRandomizer, IBoardVerifier boardVerifier, IGameRulesCellVerifier gameRulesCellVerifier)
+                              ICellRandomizer cellRandomizer, IBoardVerifier boardVerifier,
+                              IGameRulesCellVerifier gameRulesCellVerifier)
         {
             _maxAttempts = Math.Max(1, maxAttempts);
             _shipOrientationRandomizer = shipOrientationRandomizer;

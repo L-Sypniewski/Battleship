@@ -7,10 +7,6 @@ namespace CoreTests.TestData.Services.Game
 {
     public class NotFinishedGameClassData : IEnumerable<object[]>
     {
-        private static Cell ShotCell() => new CellBuilder().WithIsShot(true).Build();
-        private static Cell NotShotCell() => new CellBuilder().WithIsShot(false).Build();
-
-
         public IEnumerator<object[]> GetEnumerator()
         {
             yield return new object[]
@@ -58,5 +54,7 @@ namespace CoreTests.TestData.Services.Game
 
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        private static Cell ShotCell() => new CellBuilder().WithIsShot(true).Build();
+        private static Cell NotShotCell() => new CellBuilder().WithIsShot(false).Build();
     }
 }
