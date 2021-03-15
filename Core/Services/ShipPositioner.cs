@@ -1,20 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Core.Exceptions;
 using Core.Model;
 
 namespace Core.Services
 {
     public sealed class ShipPositioner : IShipPositioner
     {
+        private readonly int _maxAttempts;
         private readonly IShipOrientationRandomizer _shipOrientationRandomizer;
         private readonly ICellRandomizer _cellRandomizer;
         private readonly IBoardVerifier _boardVerifier;
 
 
-        public ShipPositioner(IShipOrientationRandomizer shipOrientationRandomizer,
-                              ICellRandomizer cellRandomizer,
-                              IBoardVerifier boardVerifier)
+        public ShipPositioner(int maxAttempts, IShipOrientationRandomizer shipOrientationRandomizer,
+                              ICellRandomizer cellRandomizer, IBoardVerifier boardVerifier)
         {
+            _maxAttempts = Math.Max(1, maxAttempts);
             _shipOrientationRandomizer = shipOrientationRandomizer;
             _cellRandomizer = cellRandomizer;
             _boardVerifier = boardVerifier;
@@ -23,8 +26,14 @@ namespace Core.Services
 
         public IReadOnlyCollection<Cell> ShipPositionsFor(Board board, int shipSize)
         {
+            var counter = 0;
             do
             {
+                if (counter > _maxAttempts)
+                {
+                    throw new CannotCreateShipPositionsException();
+                }
+
                 var firstCell = _cellRandomizer.GetCellWithin(board.Size);
                 var orientation = _shipOrientationRandomizer.GetOrientation();
 
@@ -35,6 +44,8 @@ namespace Core.Services
                 {
                     return shipPositions;
                 }
+
+                counter++;
             } while (true);
         }
 
