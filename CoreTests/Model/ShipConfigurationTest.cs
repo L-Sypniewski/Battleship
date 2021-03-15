@@ -4,7 +4,7 @@ using Core.Model;
 using FluentAssertions;
 using Xunit;
 
-namespace CoreTests.Services
+namespace CoreTests.Model
 {
     public class ShipConfigurationTest
     {
