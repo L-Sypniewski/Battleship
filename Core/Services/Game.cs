@@ -8,9 +8,9 @@ namespace Core.Services
 {
     public sealed class Game : IGame
     {
+        private readonly IBoardInitializer _boardInitializer;
         private readonly BoardSize _boardSize;
         private readonly ISet<ShipConfiguration> _shipConfigurations;
-        private readonly IBoardInitializer _boardInitializer;
 
 
         public Game(BoardSize boardSize,
@@ -29,7 +29,7 @@ namespace Core.Services
         }
 
 
-        public void EndGame() => throw new System.NotImplementedException();
+        public void EndGame() => throw new NotImplementedException();
 
 
         public bool IsFinished(Board board) => board.Ships
@@ -39,28 +39,52 @@ namespace Core.Services
 
         public GameMoveResult ShootAt(Board board, Cell cell)
         {
-            var allShips = board.Ships;
+            var shotShip = ShotShip(board, cell);
+            var updatedBoard = UpdatedBoard(board, cell);
+            return new GameMoveResult(updatedBoard, shotShip);
+        }
 
-            var shipWihCellToShot = ShipContaining(allShips, cell);
-            var cellsFromShipToShot = shipWihCellToShot.Cells.ToList();
-            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cell);
 
-            var isCellRemoved = cellsFromShipToShot.Remove(cell);
-            if (!isCellRemoved)
-            {
-                throw new ApplicationException("Cell was not removed");
-            }
+        private static Ship? ShotShip(Board oldBoard, Cell cellToShot)
+        {
+            var shipWithCellToShot = ShipContaining(oldBoard.Ships, cellToShot);
+            var updatedCells = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
+            return shipWithCellToShot with {Cells = updatedCells};
+        }
 
-            cellsFromShipToShot.Insert(indexOfCellToRemove, cell with {IsShot = true});
-            var updatedShip = shipWihCellToShot with {Cells = cellsFromShipToShot.ToImmutableArray()};
 
-            var indexOfShipToUpdate = allShips.IndexOf(shipWihCellToShot);
-            var shipsWithRemovedShipToUpdate = allShips.Remove(shipWihCellToShot);
-            var updatedShips = shipsWithRemovedShipToUpdate.Insert(indexOfShipToUpdate, updatedShip);
+        private static Board UpdatedBoard(Board oldBoard, Cell cellToShot)
+        {
+            var allShips = oldBoard.Ships;
 
-            var updatedBoard = board with {Ships = updatedShips};
+            var shipWithCellToShot = ShipContaining(allShips, cellToShot);
+            var updatedCells = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
+            var updatedShips = UpdatedShips(shipWithCellToShot, allShips, updatedCells);
+            return oldBoard with {Ships = updatedShips};
+        }
 
-            return new GameMoveResult(updatedBoard, updatedShip);
+
+        private static IImmutableList<Ship> UpdatedShips(Ship shipToBeUpdated,
+                                                         IImmutableList<Ship> allShips,
+                                                         IImmutableList<Cell> updatedCells)
+        {
+            var updatedShip = shipToBeUpdated with {Cells = updatedCells};
+
+            var indexOfShipToUpdate = allShips.IndexOf(shipToBeUpdated);
+            var shipsWithRemovedShipToUpdate = allShips.Remove(shipToBeUpdated);
+            return shipsWithRemovedShipToUpdate.Insert(indexOfShipToUpdate, updatedShip);
+        }
+
+
+        private static IImmutableList<Cell> UpdatedCellsFrom(Ship shipWithCellToShot,
+                                                             Cell cellToShot)
+        {
+            var cellsFromShipToShot = shipWithCellToShot.Cells;
+
+            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cellToShot);
+            var cellsWithRemovedCellToShoot = cellsFromShipToShot.Remove(cellToShot);
+
+            return cellsWithRemovedCellToShoot.Insert(indexOfCellToRemove, cellToShot with {IsShot = true});
         }
 
 
