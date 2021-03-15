@@ -8,9 +8,7 @@ namespace Core.Model
     /// </summary>
     public sealed record ShipConfiguration(int ShipSize, int ShipsNumber)
     {
-        public override int GetHashCode() => ShipSize.GetHashCode();
-
         public bool Equals(ShipConfiguration? other) => ShipSize.Equals(other?.ShipSize);
-
+        public override int GetHashCode() => ShipSize.GetHashCode();
     }
 }

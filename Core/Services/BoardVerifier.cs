@@ -17,7 +17,6 @@ namespace Core.Services
 
         public bool CellsAreWithinBounds(BoardSize boardSize, IEnumerable<Cell> cells)
         {
-
             var cellsWithNegativeCoordinates = cells.Where(CellsContainsNegativeCoordinate).ToArray();
             if (cellsWithNegativeCoordinates.Any())
             {

@@ -15,11 +15,11 @@ namespace CoreTests.Services
     [SuppressMessage("ReSharper", "CoVariantArrayConversion")]
     public class ShipPositionerTest
     {
-        private ShipPositioner _sut;
+        private readonly Mock<IBoardVerifier> _boardVerifier = new();
+        private readonly Mock<ICellRandomizer> _cellRandomizer = new();
 
         private readonly Mock<IShipOrientationRandomizer> _shipOrientationRandomizer = new();
-        private readonly Mock<ICellRandomizer> _cellRandomizer = new();
-        private readonly Mock<IBoardVerifier> _boardVerifier = new();
+        private ShipPositioner _sut;
 
 
         public ShipPositionerTest()
@@ -94,7 +94,7 @@ namespace CoreTests.Services
                           .Returns(true);
 
 
-            var _ = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize: 1);
+            var _ = _sut.ShipPositionsFor(new BoardBuilder().Build(), 1);
 
 
             const int expectedNumberOfServiceCalls = numberOfFailedVerifications + 1;

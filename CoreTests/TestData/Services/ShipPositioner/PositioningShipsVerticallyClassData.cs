@@ -14,7 +14,7 @@ namespace CoreTests.TestData.Services.ShipPositioner
                 1,
                 new[]
                 {
-                    new CellBuilder().WithCoordinates(0, 0).Build(),
+                    new CellBuilder().WithCoordinates(0, 0).Build()
                 }
             };
 
@@ -25,7 +25,7 @@ namespace CoreTests.TestData.Services.ShipPositioner
                 new[]
                 {
                     new CellBuilder().WithCoordinates(0, 0).Build(),
-                    new CellBuilder().WithCoordinates(0, 1).Build(),
+                    new CellBuilder().WithCoordinates(0, 1).Build()
                 }
             };
             yield return new object[]
@@ -36,7 +36,7 @@ namespace CoreTests.TestData.Services.ShipPositioner
                 {
                     new CellBuilder().WithCoordinates(4, 6).Build(),
                     new CellBuilder().WithCoordinates(4, 7).Build(),
-                    new CellBuilder().WithCoordinates(4, 8).Build(),
+                    new CellBuilder().WithCoordinates(4, 8).Build()
                 }
             };
             yield return new object[]
@@ -48,7 +48,7 @@ namespace CoreTests.TestData.Services.ShipPositioner
                     new CellBuilder().WithCoordinates(-10, -5).Build(),
                     new CellBuilder().WithCoordinates(-10, -4).Build(),
                     new CellBuilder().WithCoordinates(-10, -3).Build(),
-                    new CellBuilder().WithCoordinates(-10, -2).Build(),
+                    new CellBuilder().WithCoordinates(-10, -2).Build()
                 }
             };
         }
