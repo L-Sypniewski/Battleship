@@ -28,7 +28,7 @@ namespace CoreTests.Services
 
 
         [Theory(DisplayName = "Ship are correctly placed in horizontal position")]
-        [ClassData(typeof(PositiningShipsHorizontallyClassData))]
+        [ClassData(typeof(PositioningShipsHorizontallyClassData))]
         public void Ship_are_correctly_placed_in_horizontal_position(Cell firstCell, int shipSize, Cell[] expectedCells)
         {
             _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
@@ -37,6 +37,23 @@ namespace CoreTests.Services
                           .Returns(true);
             _shipOrientationRandomizer.Setup(mock => mock.GetOrientation())
                                       .Returns(ShipOrientation.Horizontal);
+
+            var shipCells = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize);
+            
+            
+            shipCells.Should().BeEquivalentTo(expectedCells);
+        }
+        
+        [Theory(DisplayName = "Ship are correctly placed in vertical position")]
+        [ClassData(typeof(PositioningShipsVerticallyClassData))]
+        public void Ship_are_correctly_placed_in_vertical_position(Cell firstCell, int shipSize, Cell[] expectedCells)
+        {
+            _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
+                           .Returns(firstCell);
+            _boardVerifier.Setup(mock => mock.ShipsAreWithinBounds(It.IsAny<Board>()))
+                          .Returns(true);
+            _shipOrientationRandomizer.Setup(mock => mock.GetOrientation())
+                                      .Returns(ShipOrientation.Vertical);
 
             var shipCells = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize);
             
