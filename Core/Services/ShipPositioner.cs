@@ -29,11 +29,6 @@ namespace Core.Services
             var counter = 0;
             do
             {
-                if (counter > _maxAttempts)
-                {
-                    throw new CannotCreateShipPositionsException();
-                }
-
                 var firstCell = _cellRandomizer.GetCellWithin(board.Size);
                 var orientation = _shipOrientationRandomizer.GetOrientation();
 
@@ -46,7 +41,9 @@ namespace Core.Services
                 }
 
                 counter++;
-            } while (true);
+            } while (counter <= _maxAttempts);
+
+            throw new CannotCreateShipPositionsException();
         }
 
 
