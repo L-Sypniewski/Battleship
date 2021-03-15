@@ -1,7 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Core.Model;
 using Core.Services;
-using CoreTests.Utils;
+using CoreTests.TestData.Services.BoardVerifier.BoardInitializer;
 using FluentAssertions;
 using Moq;
 using Xunit;
@@ -17,70 +18,35 @@ namespace CoreTests.Services
 
         public BoardInitializerTest()
         {
-            _sut = new BoardInitializer(new ShipPositioner(10, new ShipOrientationRandomizer(), new CellRandomizer(),
-                                                           new BoardVerifier(), new StandardBattleshipGameRulesCellVerifier())
-                                        , new CellVerifier(), 10);
+            _sut = new BoardInitializer(_shipPositioner.Object, _cellVerifier.Object, 10);
         }
 
 
-        [Theory(DisplayName = "All ships are placed on a board")]
-        [MemberData(nameof(PlacingShipsTestData))]
-        public void All_ships_are_placed_on_board(ISet<ShipConfiguration> shipConfigurations, int expectedNumberOfPlacedShips)
+        private void SetupShipPositionerToReturn(IReadOnlyCollection<Cell> cells)
         {
+            _shipPositioner.Setup(mock => mock.ShipPositionsFor(It.IsAny<Board>(), It.IsAny<int>())).Returns(cells);
+        }
+
+
+        private void SetupCellIntersectionVerifierToReturn(bool result)
+        {
+            _cellVerifier.Setup(mock => mock.CellsIntersect(It.IsAny<IEnumerable<Cell>>())).Returns(result);
+        }
+
+
+        [Theory(DisplayName = "All ships are placed on a board if all verifications succeeded")]
+        [ClassData(typeof(NumberOfPlacedShipsClassData))]
+        public void All_ships_are_placed_on_board_if_all_verifications_succeeded(
+            ISet<ShipConfiguration> shipConfigurations, int expectedNumberOfPlacedShips)
+        {
+            SetupShipPositionerToReturn(Array.Empty<Cell>());
+            SetupCellIntersectionVerifierToReturn(false);
+
             BoardSize boardSize = new(0, 0);
-
             var initializedBoard = _sut.InitializedBoard(boardSize, shipConfigurations);
 
             initializedBoard.Ships.Should().HaveCount(expectedNumberOfPlacedShips,
                                                       "number of placed ships should equal a sum of ships from shipConfigurations");
-        }
-
-
-        [Theory(DisplayName = "Ships positions are determined by IShipPositioner")]
-        [MemberData(nameof(PlacingShipsTestData))]
-        public void Ships_positions_are_determined_by_IShipPositioner(ISet<ShipConfiguration> shipConfigurations,
-                                                                      int expectedNumberOfPlacedShips)
-        {
-            BoardSize boardSize = new(5, 5);
-
-            var initializedBoard = _sut.InitializedBoard(boardSize, shipConfigurations);
-
-            initializedBoard.Ships.Should().HaveCount(expectedNumberOfPlacedShips,
-                                                      "number of placed ships should equal a sum of ships from shipConfigurations");
-        }
-
-
-        public static IEnumerable<object[]> PlacingShipsTestData()
-        {
-            return new List<object[]>
-            {
-                new object[]
-                {
-                    new HashSet<ShipConfiguration>(new[]
-                    {
-                        new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
-                        new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(4).Build(),
-                    }),
-                    6
-                },
-                new object[]
-                {
-                    new HashSet<ShipConfiguration>(new[]
-                    {
-                        new ShipConfigurationBuilder().WithShipSize(4).WithShipsNumber(2).Build(),
-                        new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
-                    }),
-                    4
-                },
-                new object[]
-                {
-                    new HashSet<ShipConfiguration>(new[]
-                    {
-                        new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(5).Build()
-                    }),
-                    5
-                }
-            };
         }
     }
 }
