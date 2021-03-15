@@ -15,7 +15,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                 new HashSet<ShipConfiguration>(new[]
                 {
                     new ShipConfigurationBuilder().WithName("Name1").WithShipSize(1).WithShipsNumber(1).Build(),
-                    new ShipConfigurationBuilder().WithName("Name2").WithShipSize(2).WithShipsNumber(3).Build(),
+                    new ShipConfigurationBuilder().WithName("Name2").WithShipSize(2).WithShipsNumber(3).Build()
                 }),
                 new[]
                 {
@@ -43,7 +43,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                 new HashSet<ShipConfiguration>(new[]
                 {
                     new ShipConfigurationBuilder().WithName("111").WithShipSize(1).WithShipsNumber(0).Build(),
-                    new ShipConfigurationBuilder().WithName("222").WithShipSize(2).WithShipsNumber(1).Build(),
+                    new ShipConfigurationBuilder().WithName("222").WithShipSize(2).WithShipsNumber(1).Build()
                 }),
                 new[]
                 {
@@ -61,7 +61,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
             {
                 new HashSet<ShipConfiguration>(new[]
                 {
-                    new ShipConfigurationBuilder().WithName("111").WithShipSize(1).WithShipsNumber(0).Build(),
+                    new ShipConfigurationBuilder().WithName("111").WithShipSize(1).WithShipsNumber(0).Build()
                 }),
                 new[]
                 {
@@ -75,7 +75,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                 {
                     new ShipConfigurationBuilder().WithName("xx").WithShipSize(1).WithShipsNumber(1).Build(),
                     new ShipConfigurationBuilder().WithName("yy").WithShipSize(2).WithShipsNumber(3).Build(),
-                    new ShipConfigurationBuilder().WithName("zz").WithShipSize(2).WithShipsNumber(2).Build(),
+                    new ShipConfigurationBuilder().WithName("zz").WithShipSize(2).WithShipsNumber(2).Build()
                 }),
                 new[]
                 {

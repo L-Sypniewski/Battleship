@@ -9,9 +9,9 @@ namespace Core.Services
 {
     public sealed class BoardInitializer : IBoardInitializer
     {
-        private readonly IShipPositioner _shipPositioner;
         private readonly ICellVerifier _cellVerifier;
         private readonly int _maxAttempts;
+        private readonly IShipPositioner _shipPositioner;
 
 
         public BoardInitializer(IShipPositioner shipPositioner, ICellVerifier cellVerifier, int maxAttempts)
@@ -68,7 +68,6 @@ namespace Core.Services
 
         private Ship? CreateNewShip(Board board, string shipName, int shipSize, ImmutableArray<Ship> ships)
         {
-            
             var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipSize).ToImmutableArray();
             var updatedPositions = ships.SelectMany(ship => ship.Cells)
                                         .ToImmutableArray()
