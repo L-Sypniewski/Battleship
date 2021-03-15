@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Core.Exceptions;
 using Core.Model;
 using Core.Services;
 using CoreTests.TestData.Services.Game;
@@ -13,6 +15,7 @@ namespace CoreTests.Services
     {
         private readonly Game _sut;
         private readonly Mock<IBoardInitializer> _boardInitializer = new();
+        private readonly Mock<IBoardVerifier> _boardVerifier = new();
 
 
         public GameTest()
@@ -24,9 +27,16 @@ namespace CoreTests.Services
         }
 
 
+        private void SetupBoardVerifierOutOfBoundsCheckToReturn(bool result)
+        {
+            _boardVerifier.Setup(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
+                          .Returns(result);
+        }
+
+
         private Game CreateSut(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations)
         {
-            return new(boardSize, shipConfigurations, _boardInitializer.Object);
+            return new(boardSize, shipConfigurations, _boardInitializer.Object, _boardVerifier.Object);
         }
 
 
@@ -78,6 +88,9 @@ namespace CoreTests.Services
         public void Correct_GameMoveResult_is_returned_after_shooting(Board initialBoard, Cell cellToShot,
                                                                       GameMoveResult expectedGameMoveResult)
         {
+            SetupBoardVerifierOutOfBoundsCheckToReturn(true);
+            
+            
             var actualGameMoveResult = _sut.ShootAt(initialBoard, cellToShot);
 
 
@@ -85,10 +98,18 @@ namespace CoreTests.Services
         }
 
 
-        [Theory(DisplayName = "Exception is thrown if shot is made out of Board bounds")]
-        [ClassData(typeof(ShotAtClassData))]
+        [Fact(DisplayName = "Exception is thrown if shot is made out of Board bounds")]
         public void Exception_is_thrown_if_shot_is_made_out_of_Board_bounds()
         {
+            SetupBoardVerifierOutOfBoundsCheckToReturn(false);
+            var initialBoard = new BoardBuilder().Build();
+            var cellToShot = new CellBuilder().Build();
+            
+            
+            Action act = () => _sut.ShootAt(initialBoard, cellToShot);
+
+
+            act.Should().Throw<CannotMakeOutOfBoundsShotException>("it is illegal to shot outside a Board");
         }
 
 
