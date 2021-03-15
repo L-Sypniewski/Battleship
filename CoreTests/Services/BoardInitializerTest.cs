@@ -17,7 +17,9 @@ namespace CoreTests.Services
 
         public BoardInitializerTest()
         {
-            _sut = new BoardInitializer(_shipPositioner.Object, _cellVerifier.Object);
+            _sut = new BoardInitializer(new ShipPositioner(10, new ShipOrientationRandomizer(), new CellRandomizer(),
+                                                           new BoardVerifier(), new StandardBattleshipGameRulesCellVerifier())
+                                        , new CellVerifier(), 10);
         }
 
 
@@ -39,7 +41,7 @@ namespace CoreTests.Services
         public void Ships_positions_are_determined_by_IShipPositioner(ISet<ShipConfiguration> shipConfigurations,
                                                                       int expectedNumberOfPlacedShips)
         {
-            BoardSize boardSize = new(0, 0);
+            BoardSize boardSize = new(5, 5);
 
             var initializedBoard = _sut.InitializedBoard(boardSize, shipConfigurations);
 
