@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Core.Model;
 using Core.Services;
-using CoreTests.TestData.Services.CellVerifier;
+using CoreTests.TestData.Services.GameRulesCellVerifier;
 using FluentAssertions;
 using Xunit;
 
