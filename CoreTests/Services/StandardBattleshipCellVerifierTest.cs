@@ -7,14 +7,14 @@ using Xunit;
 
 namespace CoreTests.Services
 {
-    public class CellVerifierTest
+    public class StandardBattleshipCellVerifierTest
     {
-        private readonly StandardBattleShipCellVerifier _sut;
+        private readonly StandardBattleshipCellVerifier _sut;
 
 
-        public CellVerifierTest()
+        public StandardBattleshipCellVerifierTest()
         {
-            _sut = new StandardBattleShipCellVerifier();
+            _sut = new StandardBattleshipCellVerifier();
         }
 
 

@@ -8,7 +8,7 @@ namespace Core.Services
     ///     <see cref="ICellVerifier" /> for a standard variant of Battleships game.
     ///     It checks if all <see cref="Cell" />s are adjacent and placed on the same axis
     /// </summary>
-    public sealed class StandardBattleShipCellVerifier : ICellVerifier
+    public sealed class StandardBattleshipCellVerifier : ICellVerifier
     {
         public bool Verify(IEnumerable<Cell> cells)
         {
