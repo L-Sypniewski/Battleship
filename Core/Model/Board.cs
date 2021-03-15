@@ -18,7 +18,7 @@ namespace Core.Model
         public override int GetHashCode() => HashCode.Combine(Size, Ships);
 
 
-        public bool Equals(Board? other) => Size.Equals(other?.Size) ||
-                                            Ships.SequenceEqual(other?.Ships ?? Enumerable.Empty<Ship>().ToImmutableArray());
+        public bool Equals(Board? other) => Size.Equals(other?.Size) &&
+                                            Ships.SequenceEqual(other.Ships);
     }
 }
