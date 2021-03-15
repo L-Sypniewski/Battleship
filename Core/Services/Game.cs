@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using Core.Model;
 
@@ -35,6 +37,36 @@ namespace Core.Services
                                                     .All(cell => cell.IsShot);
 
 
-        public GameMoveResult ShootAt(Board board, Cell cell) => throw new System.NotImplementedException();
+        public GameMoveResult ShootAt(Board board, Cell cell)
+        {
+            var allShips = board.Ships;
+
+            var shipWihCellToShot = ShipContaining(allShips, cell);
+            var cellsFromShipToShot = shipWihCellToShot.Cells.ToList();
+            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cell);
+
+            var isCellRemoved = cellsFromShipToShot.Remove(cell);
+            if (!isCellRemoved)
+            {
+                throw new ApplicationException("Cell was not removed");
+            }
+
+            cellsFromShipToShot.Insert(indexOfCellToRemove, cell with {IsShot = true});
+            var updatedShip = shipWihCellToShot with {Cells = cellsFromShipToShot.ToImmutableArray()};
+
+            var indexOfShipToUpdate = allShips.IndexOf(shipWihCellToShot);
+            var shipsWithRemovedShipToUpdate = allShips.Remove(shipWihCellToShot);
+            var updatedShips = shipsWithRemovedShipToUpdate.Insert(indexOfShipToUpdate, updatedShip);
+
+            var updatedBoard = board with {Ships = updatedShips};
+
+            return new GameMoveResult(updatedBoard, updatedShip);
+        }
+
+
+        private static Ship ShipContaining(IEnumerable<Ship> ships, Cell cell)
+        {
+            return ships.Single(ship => ship.Cells.Contains(cell));
+        }
     }
 }
