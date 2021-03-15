@@ -24,10 +24,12 @@ namespace CoreTests.Services
             var shipConfiguration = new ShipConfigurationBuilder().Build();
             var shipConfigurations = new HashSet<ShipConfiguration>(new[] {shipConfiguration});
             _sut = CreateSut(boardSize, shipConfigurations);
+            
+            SetupBoardVerifierBoundsCheckToReturn(true);
         }
 
 
-        private void SetupBoardVerifierOutOfBoundsCheckToReturn(bool result)
+        private void SetupBoardVerifierBoundsCheckToReturn(bool result)
         {
             _boardVerifier.Setup(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
                           .Returns(result);
@@ -88,9 +90,6 @@ namespace CoreTests.Services
         public void Correct_GameMoveResult_is_returned_after_shooting(Board initialBoard, Cell cellToShot,
                                                                       GameMoveResult expectedGameMoveResult)
         {
-            SetupBoardVerifierOutOfBoundsCheckToReturn(true);
-            
-            
             var actualGameMoveResult = _sut.ShootAt(initialBoard, cellToShot);
 
 
@@ -101,7 +100,7 @@ namespace CoreTests.Services
         [Fact(DisplayName = "Exception is thrown if shot is made out of Board bounds")]
         public void Exception_is_thrown_if_shot_is_made_out_of_Board_bounds()
         {
-            SetupBoardVerifierOutOfBoundsCheckToReturn(false);
+            SetupBoardVerifierBoundsCheckToReturn(false);
             var initialBoard = new BoardBuilder().Build();
             var cellToShot = new CellBuilder().Build();
             
@@ -114,9 +113,13 @@ namespace CoreTests.Services
 
 
         [Theory(DisplayName = "Exception is thrown if shot is made at already hit cell")]
-        [ClassData(typeof(ShotAtClassData))]
-        public void Exception_is_thrown_if_shot_is_made_at_already_hit_cell()
+        [ClassData(typeof(ShotAtAlreadyShotCellClassData))]
+        public void Exception_is_thrown_if_shot_is_made_at_already_hit_cell(Board initialBoard, Cell cellToShot)
         {
+            Action act = () => _sut.ShootAt(initialBoard, cellToShot);
+
+
+            act.Should().Throw<CannotShotAlreadyShotCellException>("it is illegal to shot already shot Cell");
         }
     }
 }
