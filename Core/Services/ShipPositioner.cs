@@ -36,8 +36,9 @@ namespace Core.Services
 
                 var shipPositions = PositionsFor(orientation, firstCell, shipSize);
 
-                var cellsAreWithinBoardBounds = _boardVerifier.CellsAreWithinBounds(board.Size, shipPositions);
-                if (cellsAreWithinBoardBounds)
+
+                var cellsPassedVerification = VerifyCells(shipPositions, board.Size, _boardVerifier, _cellVerifier);
+                if (cellsPassedVerification)
                 {
                     return shipPositions;
                 }
@@ -46,6 +47,21 @@ namespace Core.Services
             } while (counter <= _maxAttempts);
 
             throw new CannotCreateShipPositionsException();
+        }
+
+
+        private static bool VerifyCells(IEnumerable<Cell> cells, BoardSize boardSize,
+                                        IBoardVerifier boardVerifier, ICellVerifier cellVerifier)
+        {
+            var shipPositions = cells.ToArray();
+            var cellsAreWithinBoardBounds = boardVerifier.CellsAreWithinBounds(boardSize, shipPositions);
+            if (!cellsAreWithinBoardBounds)
+            {
+                return false;
+            }
+
+            var cellsAreCorrectlyCreated = cellVerifier.Verify(shipPositions);
+            return cellsAreCorrectlyCreated;
         }
 
 
