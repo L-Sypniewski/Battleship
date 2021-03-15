@@ -17,7 +17,7 @@ namespace CoreTests.Services
     {
         private readonly Mock<IBoardVerifier> _boardVerifier = new();
         private readonly Mock<ICellRandomizer> _cellRandomizer = new();
-        private readonly Mock<ICellVerifier> _cellVerifier = new();
+        private readonly Mock<IGameRulesCellVerifier> _cellVerifier = new();
 
         private readonly Mock<IShipOrientationRandomizer> _shipOrientationRandomizer = new();
         private ShipPositioner _sut;
