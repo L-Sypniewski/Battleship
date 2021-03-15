@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Core.Exceptions;
 using Core.Model;
 
 namespace Core.Services
@@ -9,48 +10,54 @@ namespace Core.Services
     {
         private readonly IShipPositioner _shipPositioner;
         private readonly ICellVerifier _cellVerifier;
+        private readonly int _maxAttempts;
 
 
-        public BoardInitializer(IShipPositioner shipPositioner, ICellVerifier cellVerifier)
+        public BoardInitializer(IShipPositioner shipPositioner, ICellVerifier cellVerifier, int maxAttempts)
         {
             _shipPositioner = shipPositioner;
             _cellVerifier = cellVerifier;
+            _maxAttempts = maxAttempts;
         }
 
 
         public Board InitializedBoard(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations)
         {
-            var shipsNumber = shipConfigurations.Sum(x => x.ShipsNumber);
-
             var board = new Board(boardSize, new ImmutableArray<Ship>());
 
-            /*
-            var shipsWithoutPosition = shipConfigurations.SelectMany(config =>
+
+            var shipsToCreate = shipConfigurations
+                .SelectMany(config => Enumerable.Range(0, config.ShipsNumber).Select(_ => new {config.Name, config.ShipSize}));
+
+            var ships = Enumerable.Empty<Ship>().ToImmutableArray();
+            var positions = Enumerable.Empty<Cell>().ToImmutableArray();
+            foreach (var shipToCreate in shipsToCreate)
             {
-                for (var i = 0; i < config.ShipsNumber; i++)
+                var counter = 0;
+                do
                 {
-                    do
+                    var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipToCreate.ShipSize).ToImmutableArray();
+                    var updatedPositions = positions.AddRange(newShipPosition);
+
+                    var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
+                    if (!doShipsIntersectEachOther)
                     {
-                        var newShipPosition = _shipPositioner.ShipPositionsFor(board, config.ShipSize).ToImmutableArray();
-                        var newShip = new Ship(config.Name, newShipPosition);
+                        ships = ships.Add(new Ship(shipToCreate.Name, newShipPosition));
+                        positions = updatedPositions;
+                        break;
+                    }
 
-                        var currentShips = board.Ships;
-                        var updatedShips = currentShips.Add(newShip);
-                        var boardWithNewShip = board with {Ships = updatedShips};
+                    counter++;
+                } while (counter <= _maxAttempts);
 
-                        var doShipsIntersectEachOther = _boardVerifier.ShipsIntersectEachOther(boardWithNewShip);
-                        if (!doShipsIntersectEachOther)
-                        {
-                            return 
-                        }
-                    } while (true);
+                if (counter > _maxAttempts)
+                {
+                    throw new CannotInitializeBoardException();
                 }
-            }).ToArray();
-            */
+            }
 
 
-            var emptyShip = new Ship("", Enumerable.Empty<Cell>().ToImmutableList());
-            return new Board(boardSize, Enumerable.Repeat(emptyShip, shipsNumber).ToImmutableList());
+            return new Board(boardSize, ships);
         }
     }
 }
