@@ -45,9 +45,11 @@ namespace CoreTests.Services
                                                                                       It.IsAny<BoardSize>(),
                                                                                       It.IsAny<IEnumerable<Cell>>()))
                                                                            .Returns(result);
+
+
         private void SetupOrientationRandomizerToReturn(ShipOrientation orientation) => _shipOrientationRandomizer
-                                                                           .Setup(mock => mock.GetOrientation())
-                                                                           .Returns(orientation);
+            .Setup(mock => mock.GetOrientation())
+            .Returns(orientation);
 
 
         private ShipPositioner CreateSut(int maxAttemps) => new(
@@ -62,7 +64,7 @@ namespace CoreTests.Services
             SetupBoardVerifierBoundsCheckToReturn(true);
             SetupCellVerifierToReturn(true);
             SetupOrientationRandomizerToReturn(ShipOrientation.Horizontal);
-            
+
 
             var shipCells = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize);
 
@@ -106,7 +108,37 @@ namespace CoreTests.Services
                           .Returns(false)
                           .Returns(false)
                           .Returns(true);
-            
+
+
+            var _ = _sut.ShipPositionsFor(new BoardBuilder().Build(), 1);
+
+
+            const int expectedNumberOfServiceCalls = numberOfFailedVerifications + 1;
+            _cellRandomizer.Verify(mock => mock.GetCellWithin(It.IsAny<BoardSize>()),
+                                   Times.Exactly(expectedNumberOfServiceCalls));
+            _shipOrientationRandomizer.Verify(mock => mock.GetOrientation(), Times.Exactly(expectedNumberOfServiceCalls));
+        }
+
+
+        [Theory(DisplayName = "New position is not returned unless it is verified to be valid")]
+        [InlineData(ShipOrientation.Horizontal)]
+        [InlineData(ShipOrientation.Vertical)]
+        public void New_position_is_not_returned_unless_it_is_verified_to_be_valid(ShipOrientation shipOrientation)
+        {
+            const int numberOfFailedVerifications = 3;
+            const int maxAttempts = numberOfFailedVerifications + 1;
+            _sut = CreateSut(maxAttempts);
+
+            var firstCell = new Cell(0, 0, false);
+            SetupCellRandomizerToReturn(firstCell);
+            SetupOrientationRandomizerToReturn(shipOrientation);
+            SetupCellVerifierToReturn(true);
+            SetupBoardVerifierBoundsCheckToReturn(true);
+            _cellVerifier.SetupSequence(mock => mock.Verify(It.IsAny<IEnumerable<Cell>>()))
+                         .Returns(false)
+                         .Returns(false)
+                         .Returns(false)
+                         .Returns(true);
 
 
             var _ = _sut.ShipPositionsFor(new BoardBuilder().Build(), 1);
@@ -120,18 +152,24 @@ namespace CoreTests.Services
 
 
         [Theory(DisplayName = "Exception is thrown if could not create valid positions after defined number of max attempts")]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(5)]
-        public void Exception_is_thrown_if_could_not_create_valid_positions_after_defined_number_of_max_attempts(int maxAttempts)
+        [InlineData(0, false, true)]
+        [InlineData(0, true, false)]
+        [InlineData(0, false, false)]
+        [InlineData(1, false, true)]
+        [InlineData(1, true, false)]
+        [InlineData(1, false, false)]
+        [InlineData(4, false, true)]
+        [InlineData(4, true, false)]
+        [InlineData(4, false, false)]
+        public void Exception_is_thrown_if_could_not_create_valid_positions_after_defined_number_of_max_attempts(int maxAttempts,
+            bool boundsCheckResult, bool cellCheckResult)
         {
             _sut = CreateSut(maxAttempts);
 
             var firstCell = new Cell(0, 0, false);
             SetupCellRandomizerToReturn(firstCell);
-            SetupBoardVerifierBoundsCheckToReturn(false);
-            SetupCellVerifierToReturn(true);
+            SetupBoardVerifierBoundsCheckToReturn(boundsCheckResult);
+            SetupCellVerifierToReturn(cellCheckResult);
 
 
             Action act = () => _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize: 1);
