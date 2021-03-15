@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core.Model;
 using Core.Services;
+using CoreTests.Utils;
 using FluentAssertions;
 using Xunit;
 
@@ -50,13 +51,30 @@ namespace CoreTests.Services
             {
                 new object[]
                 {
-                    new HashSet<ShipConfiguration>(new[] {new ShipConfiguration(1, 2), new ShipConfiguration(2, 4)}), 6
+                    new HashSet<ShipConfiguration>(new[]
+                    {
+                        new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
+                        new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(4).Build(),
+                    }),
+                    6
                 },
                 new object[]
                 {
-                    new HashSet<ShipConfiguration>(new[] {new ShipConfiguration(4, 2), new ShipConfiguration(1, 2)}), 4
+                    new HashSet<ShipConfiguration>(new[]
+                    {
+                        new ShipConfigurationBuilder().WithShipSize(4).WithShipsNumber(2).Build(),
+                        new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
+                    }),
+                    4
                 },
-                new object[] {new HashSet<ShipConfiguration>(new[] {new ShipConfiguration(2, 5)}), 5}
+                new object[]
+                {
+                    new HashSet<ShipConfiguration>(new[]
+                    {
+                        new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(5).Build()
+                    }),
+                    5
+                }
             };
         }
     }
