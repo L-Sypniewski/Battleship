@@ -60,7 +60,8 @@ namespace CoreTests.Services
 
             gameFinished.Should().BeTrue("all Cells on a Board have been shot");
         }
-        
+
+
         [Theory(DisplayName = "Game is not finished if not all Cells have been shot")]
         [ClassData(typeof(NotFinishedGameClassData))]
         public void Game_is_not_finished_if_not_all_Cells_have_been_shot(Board board)
@@ -69,6 +70,32 @@ namespace CoreTests.Services
 
 
             gameFinished.Should().BeFalse("NOT all Cells on a Board have been shot");
+        }
+
+
+        [Theory(DisplayName = "Correct GameMoveResult is returned after shooting")]
+        [ClassData(typeof(ShotAtClassData))]
+        public void Correct_GameMoveResult_is_returned_after_shooting(Board initialBoard, Cell cellToShot,
+                                                                      GameMoveResult expectedGameMoveResult)
+        {
+            var actualGameMoveResult = _sut.ShootAt(initialBoard, cellToShot);
+
+
+            actualGameMoveResult.Should().Be(expectedGameMoveResult);
+        }
+
+
+        [Theory(DisplayName = "Exception is thrown if shot is made out of Board bounds")]
+        [ClassData(typeof(ShotAtClassData))]
+        public void Exception_is_thrown_if_shot_is_made_out_of_Board_bounds()
+        {
+        }
+
+
+        [Theory(DisplayName = "Exception is thrown if shot is made at already hit cell")]
+        [ClassData(typeof(ShotAtClassData))]
+        public void Exception_is_thrown_if_shot_is_made_at_already_hit_cell()
+        {
         }
     }
 }
