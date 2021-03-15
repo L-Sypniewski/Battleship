@@ -6,8 +6,8 @@ namespace CoreTests.Utils
 {
     public class ShipBuilder
     {
-        private string _name = "";
         private Cell[] _cells = Array.Empty<Cell>();
+        private string _name = "";
 
 
         public ShipBuilder WithName(string name)
