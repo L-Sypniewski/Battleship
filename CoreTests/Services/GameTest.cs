@@ -1,16 +1,52 @@
-﻿using Core.Services;
+﻿using System.Collections.Generic;
+using Core.Model;
+using Core.Services;
+using CoreTests.Utils;
+using FluentAssertions;
+using Moq;
+using Xunit;
 
 namespace CoreTests.Services
 {
     public class GameTest
     {
         private readonly Game _sut;
+        private readonly Mock<IBoardInitializer> _boardInitializer = new();
 
 
         public GameTest()
         {
-            _sut = new Game();
+            var boardSize = new BoardSize(5, 5);
+            var shipConfiguration = new ShipConfigurationBuilder().Build();
+            var shipConfigurations = new HashSet<ShipConfiguration>(new[] {shipConfiguration});
+            _sut = CreateSut(boardSize, shipConfigurations);
         }
 
+
+        private Game CreateSut(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations)
+        {
+            return new(boardSize, shipConfigurations, _boardInitializer.Object);
+        }
+
+
+        [Fact(DisplayName = "Initialized Board is returned when new game starts")]
+        public void Initialized_Board_is_returned_when_new_game_starts()
+        {
+            var expectedNewBoard = new BoardBuilder()
+                                   .WithSize(new BoardSize(33, 33))
+                                   .WithShips(new[]
+                                   {
+                                       new ShipBuilder().WithName("SuperShip").Build()
+                                   }).Build();
+            _boardInitializer.Setup(mock => mock.InitializedBoard(It.IsAny<BoardSize>(), It.IsAny<ISet<ShipConfiguration>>()))
+                             .Returns(expectedNewBoard);
+
+
+            var actualNewBoard = _sut.StartGame();
+
+
+            actualNewBoard.Should().Be(expectedNewBoard,
+                                       "Upon starting new game Board created by IBoardInitializer should be returned");
+        }
     }
 }
