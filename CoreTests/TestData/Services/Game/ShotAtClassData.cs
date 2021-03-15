@@ -53,7 +53,7 @@ namespace CoreTests.TestData.Services.Game
                                          .WithCells(new[]
                                          {
                                              new CellBuilder().WithCoordinates(24, 6).Build(),
-                                             new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build(),
+                                             new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build()
                                          }).Build()
                     }).Build(),
                 new CellBuilder().WithCoordinates(24, 6).Build(),
@@ -72,14 +72,14 @@ namespace CoreTests.TestData.Services.Game
                                              .WithCells(new[]
                                              {
                                                  new CellBuilder().WithCoordinates(24, 6).Build(),
-                                                 new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build(),
+                                                 new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build()
                                              }).Build()
                         }).Build(),
                     new ShipBuilder().WithName("yyy")
                                      .WithCells(new[]
                                      {
                                          new CellBuilder().WithCoordinates(24, 6).Build(),
-                                         new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build(),
+                                         new CellBuilder().WithCoordinates(24, 7).WithIsShot(true).Build()
                                      }).Build())
             };
         }

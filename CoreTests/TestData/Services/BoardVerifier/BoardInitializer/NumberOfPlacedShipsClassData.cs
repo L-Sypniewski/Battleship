@@ -14,7 +14,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                 new HashSet<ShipConfiguration>(new[]
                 {
                     new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
-                    new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(4).Build(),
+                    new ShipConfigurationBuilder().WithShipSize(2).WithShipsNumber(4).Build()
                 }),
                 6
             };
@@ -23,7 +23,7 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                 new HashSet<ShipConfiguration>(new[]
                 {
                     new ShipConfigurationBuilder().WithShipSize(4).WithShipsNumber(2).Build(),
-                    new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build(),
+                    new ShipConfigurationBuilder().WithShipSize(1).WithShipsNumber(2).Build()
                 }),
                 4
             };

@@ -35,7 +35,7 @@ namespace CoreTests.TestData.Services.CellVerifier
                     new CellBuilder().WithCoordinates(101, 2).Build()
                 }
             };
-            
+
             yield return new object[]
             {
                 new[]
@@ -44,7 +44,7 @@ namespace CoreTests.TestData.Services.CellVerifier
                     new CellBuilder().WithCoordinates(1, 0).Build()
                 }
             };
-            
+
             yield return new object[]
             {
                 new[]
