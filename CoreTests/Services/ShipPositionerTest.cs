@@ -17,6 +17,7 @@ namespace CoreTests.Services
     {
         private readonly Mock<IBoardVerifier> _boardVerifier = new();
         private readonly Mock<ICellRandomizer> _cellRandomizer = new();
+        private readonly Mock<ICellVerifier> _cellVerifier = new();
 
         private readonly Mock<IShipOrientationRandomizer> _shipOrientationRandomizer = new();
         private ShipPositioner _sut;
@@ -29,21 +30,39 @@ namespace CoreTests.Services
         }
 
 
+        private void SetupCellRandomizerToReturn(Cell cell) => _cellRandomizer
+                                                               .Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
+                                                               .Returns(cell);
+
+
+        private void SetupCellVerifierToReturn(bool result) => _cellVerifier
+                                                               .Setup(mock => mock.Verify(It.IsAny<IEnumerable<Cell>>()))
+                                                               .Returns(result);
+
+
+        private void SetupBoardVerifierBoundsCheckToReturn(bool result) => _boardVerifier
+                                                                           .Setup(mock => mock.CellsAreWithinBounds(
+                                                                                      It.IsAny<BoardSize>(),
+                                                                                      It.IsAny<IEnumerable<Cell>>()))
+                                                                           .Returns(result);
+        private void SetupOrientationRandomizerToReturn(ShipOrientation orientation) => _shipOrientationRandomizer
+                                                                           .Setup(mock => mock.GetOrientation())
+                                                                           .Returns(orientation);
+
+
         private ShipPositioner CreateSut(int maxAttemps) => new(
-            maxAttemps, _shipOrientationRandomizer.Object, _cellRandomizer.Object, _boardVerifier.Object);
+            maxAttemps, _shipOrientationRandomizer.Object, _cellRandomizer.Object, _boardVerifier.Object, _cellVerifier.Object);
 
 
         [Theory(DisplayName = "Ship are correctly placed in horizontal position")]
         [ClassData(typeof(PositioningShipsHorizontallyClassData))]
         public void Ship_are_correctly_placed_in_horizontal_position(Cell firstCell, int shipSize, Cell[] expectedCells)
         {
-            _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
-                           .Returns(firstCell);
-            _boardVerifier.Setup(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
-                          .Returns(true);
-            _shipOrientationRandomizer.Setup(mock => mock.GetOrientation())
-                                      .Returns(ShipOrientation.Horizontal);
-
+            SetupCellRandomizerToReturn(firstCell);
+            SetupBoardVerifierBoundsCheckToReturn(true);
+            SetupCellVerifierToReturn(true);
+            SetupOrientationRandomizerToReturn(ShipOrientation.Horizontal);
+            
 
             var shipCells = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize);
 
@@ -56,12 +75,10 @@ namespace CoreTests.Services
         [ClassData(typeof(PositioningShipsVerticallyClassData))]
         public void Ship_are_correctly_placed_in_vertical_position(Cell firstCell, int shipSize, Cell[] expectedCells)
         {
-            _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
-                           .Returns(firstCell);
-            _boardVerifier.Setup(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
-                          .Returns(true);
-            _shipOrientationRandomizer.Setup(mock => mock.GetOrientation())
-                                      .Returns(ShipOrientation.Vertical);
+            SetupCellRandomizerToReturn(firstCell);
+            SetupBoardVerifierBoundsCheckToReturn(true);
+            SetupCellVerifierToReturn(true);
+            SetupOrientationRandomizerToReturn(ShipOrientation.Vertical);
 
 
             var shipCells = _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize);
@@ -81,17 +98,15 @@ namespace CoreTests.Services
             _sut = CreateSut(maxAttempts);
 
             var firstCell = new Cell(0, 0, false);
-            _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
-                           .Returns(firstCell);
-
-            _shipOrientationRandomizer.Setup(mock => mock.GetOrientation())
-                                      .Returns(shipOrientation);
-
+            SetupCellRandomizerToReturn(firstCell);
+            SetupOrientationRandomizerToReturn(shipOrientation);
+            SetupCellVerifierToReturn(true);
             _boardVerifier.SetupSequence(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
                           .Returns(false)
                           .Returns(false)
                           .Returns(false)
                           .Returns(true);
+            
 
 
             var _ = _sut.ShipPositionsFor(new BoardBuilder().Build(), 1);
@@ -114,13 +129,11 @@ namespace CoreTests.Services
             _sut = CreateSut(maxAttempts);
 
             var firstCell = new Cell(0, 0, false);
-            _cellRandomizer.Setup(mock => mock.GetCellWithin(It.IsAny<BoardSize>()))
-                           .Returns(firstCell);
+            SetupCellRandomizerToReturn(firstCell);
+            SetupBoardVerifierBoundsCheckToReturn(false);
+            SetupCellVerifierToReturn(true);
 
-            _boardVerifier.Setup(mock => mock.CellsAreWithinBounds(It.IsAny<BoardSize>(), It.IsAny<IEnumerable<Cell>>()))
-                          .Returns(false);
 
-            
             Action act = () => _sut.ShipPositionsFor(new BoardBuilder().Build(), shipSize: 1);
 
 
