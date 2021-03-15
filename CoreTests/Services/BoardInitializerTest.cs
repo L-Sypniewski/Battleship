@@ -48,5 +48,22 @@ namespace CoreTests.Services
             initializedBoard.Ships.Should().HaveCount(expectedNumberOfPlacedShips,
                                                       "number of placed ships should equal a sum of ships from shipConfigurations");
         }
+
+
+        [Theory(DisplayName = "All ships are created with a correct name and position")]
+        [ClassData(typeof(CreatingShipsClassData))]
+        public void All_ships_are_created_with_correct_name_and_position(ISet<ShipConfiguration> shipConfigurations,
+                                                                         Cell[] positionsCreatedByPositioner,
+                                                                         IEnumerable<Ship> expectedCreatedShips)
+        {
+            SetupShipPositionerToReturn(positionsCreatedByPositioner);
+            SetupCellIntersectionVerifierToReturn(false);
+
+            BoardSize boardSize = new(0, 0);
+            var initializedBoard = _sut.InitializedBoard(boardSize, shipConfigurations);
+
+            initializedBoard.Ships.Should().BeEquivalentTo(expectedCreatedShips,
+                                                           "created Ships should have values assigned from ShipPositioner and ShipConfiguration");
+        }
     }
 }
