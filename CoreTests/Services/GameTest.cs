@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Core.Model;
 using Core.Services;
+using CoreTests.TestData.Services.Game;
 using CoreTests.Utils;
 using FluentAssertions;
 using Moq;
@@ -47,6 +48,27 @@ namespace CoreTests.Services
 
             actualNewBoard.Should().Be(expectedNewBoard,
                                        "Upon starting new game Board created by IBoardInitializer should be returned");
+        }
+
+
+        [Theory(DisplayName = "Game is finished when all Cells have been shot")]
+        [ClassData(typeof(FinishedGameClassData))]
+        public void Game_is_finished_when_all_Cells_have_been_shot(Board board)
+        {
+            var gameFinished = _sut.IsFinished(board);
+
+
+            gameFinished.Should().BeTrue("all Cells on a Board have been shot");
+        }
+        
+        [Theory(DisplayName = "Game is not finished if not all Cells have been shot")]
+        [ClassData(typeof(NotFinishedGameClassData))]
+        public void Game_is_not_finished_if_not_all_Cells_have_been_shot(Board board)
+        {
+            var gameFinished = _sut.IsFinished(board);
+
+
+            gameFinished.Should().BeFalse("NOT all Cells on a Board have been shot");
         }
     }
 }
