@@ -38,18 +38,25 @@ namespace Core.Services
                 var counter = 0;
                 do
                 {
-                    var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipToCreate.ShipSize).ToImmutableArray();
-                    var updatedPositions = positions.AddRange(newShipPosition);
-
-                    var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
-                    if (!doShipsIntersectEachOther)
+                    try
                     {
-                        ships = ships.Add(new Ship(shipToCreate.Name, newShipPosition));
-                        positions = updatedPositions;
-                        break;
-                    }
+                        var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipToCreate.ShipSize).ToImmutableArray();
+                        var updatedPositions = positions.AddRange(newShipPosition);
 
-                    counter++;
+                        var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
+                        if (!doShipsIntersectEachOther)
+                        {
+                            ships = ships.Add(new Ship(shipToCreate.Name, newShipPosition));
+                            positions = updatedPositions;
+                            break;
+                        }
+
+                        counter++;
+                    }
+                    catch (CannotCreateShipPositionsException createShipPositionsException)
+                    {
+                        throw new CannotInitializeBoardException(createShipPositionsException.Message);
+                    }
                 } while (counter <= _maxAttempts);
 
                 if (counter > _maxAttempts)
