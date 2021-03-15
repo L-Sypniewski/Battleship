@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Core.Model;
 using Core.Services;
 using CoreTests.TestData.Services.CellVerifier;
-using CoreTests.Utils;
 using FluentAssertions;
 using Xunit;
 
