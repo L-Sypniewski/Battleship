@@ -9,12 +9,12 @@ namespace CoreTests.Services
 {
     public class StandardBattleshipCellVerifierTest
     {
-        private readonly StandardBattleshipCellVerifier _sut;
+        private readonly StandardBattleshipGameRulesCellVerifier _sut;
 
 
         public StandardBattleshipCellVerifierTest()
         {
-            _sut = new StandardBattleshipCellVerifier();
+            _sut = new StandardBattleshipGameRulesCellVerifier();
         }
 
 

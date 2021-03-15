@@ -3,7 +3,7 @@ using Core.Model;
 
 namespace Core.Services
 {
-    public interface ICellVerifier
+    public interface IGameRulesCellVerifier
     {
         bool Verify(IEnumerable<Cell> cells);
     }
