@@ -23,11 +23,19 @@ namespace Core.Services
 
         public IReadOnlyCollection<Cell> ShipPositionsFor(Board board, int shipSize)
         {
-            var firstCell = _cellRandomizer.GetCellWithin(board.Size);
-            var orientation = _shipOrientationRandomizer.GetOrientation();
+            do
+            {
+                var firstCell = _cellRandomizer.GetCellWithin(board.Size);
+                var orientation = _shipOrientationRandomizer.GetOrientation();
 
-            var shipPositions = PositionsFor(orientation, firstCell, shipSize);
-            return shipPositions;
+                var shipPositions = PositionsFor(orientation, firstCell, shipSize);
+
+                var cellsAreWithinBoardBounds = _boardVerifier.CellsAreWithinBounds(board.Size, shipPositions);
+                if (cellsAreWithinBoardBounds)
+                {
+                    return shipPositions;
+                }
+            } while (true);
         }
 
 
