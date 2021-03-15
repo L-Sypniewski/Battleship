@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Core.Exceptions;
 using Core.Model;
 
 namespace Core.Services
@@ -10,7 +11,7 @@ namespace Core.Services
         /// </summary>
         /// <param name="boardSize">Board size</param>
         /// <param name="shipConfigurations">Set containing ships configurations</param>
-        /// <returns></returns>
+        /// <exception cref="CannotCreateShipPositionsException"></exception>
         Board InitializedBoard(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations);
     }
 }
