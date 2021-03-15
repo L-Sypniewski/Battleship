@@ -3,6 +3,7 @@ using Core.Model;
 using Core.Services;
 using CoreTests.Utils;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace CoreTests.Services
@@ -10,11 +11,13 @@ namespace CoreTests.Services
     public class BoardInitializerTest
     {
         private readonly BoardInitializer _sut;
+        private readonly Mock<IShipPositioner> _shipPositioner = new();
+        private readonly Mock<ICellVerifier> _cellVerifier = new();
 
 
         public BoardInitializerTest()
         {
-            _sut = new BoardInitializer();
+            _sut = new BoardInitializer(_shipPositioner.Object, _cellVerifier.Object);
         }
 
 

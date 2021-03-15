@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using Core.Exceptions;
 using Core.Model;
@@ -19,32 +18,6 @@ namespace CoreTests.Services
         public BoardVerifierTest()
         {
             _sut = new BoardVerifier();
-        }
-
-
-        [Theory(DisplayName = "BoardVerifier correctly detects when some Ships overlap")]
-        [ClassData(typeof(OverlappingShipsClassData))]
-        public void BoardVerifier_correctly_detects_when_some_Ships_overlap(IEnumerable<Ship> ships)
-        {
-            BoardSize boardSize = new(0, 0);
-            var board = new Board(boardSize, ships.ToImmutableList());
-
-
-            _sut.ShipsIntersectEachOther(board).Should()
-                .BeTrue("provided Ships share some of the cells - they have the same coordinates");
-        }
-
-
-        [Theory(DisplayName = "BoardVerifier correctly detects when Ships don't overlap")]
-        [ClassData(typeof(NonOverlappingShipsClassData))]
-        public void BoardVerifier_correctly_detects_when_Ships_do_not_overlap(IEnumerable<Ship> ships)
-        {
-            BoardSize boardSize = new(0, 0);
-            var board = new Board(boardSize, ships.ToImmutableList());
-
-
-            _sut.ShipsIntersectEachOther(board).Should()
-                .BeFalse("provided Ships don't the cells - they all have different coordinates");
         }
 
 
