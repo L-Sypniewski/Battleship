@@ -48,29 +48,28 @@ namespace CoreTests.Services
         }
 
 
-        [Theory(DisplayName = "BoardVerifier throws exception if any of the Ships has negative coordinates")]
+        [Theory(DisplayName = "BoardVerifier throws exception if any of the Cells has negative coordinates")]
         [ClassData(typeof(ShipsWithNegativeCoordinatesClassData))]
-        public void BoardVerifier_throws_exception_if_any_of_the_Ships_has_negative_coordinates(IEnumerable<Ship> allShips,
-            IEnumerable<Ship> invalidShips)
+        public void BoardVerifier_throws_exception_if_any_of_the_Cells_has_negative_coordinates(IEnumerable<Cell> allCells,
+            IEnumerable<Cell> invalidCells)
         {
             BoardSize boardSize = new(0, 0);
-            var board = new Board(boardSize, allShips.ToImmutableList());
+
+            Action act = () => _sut.CellsAreWithinBounds(boardSize, allCells);
 
 
-            Action act = () => _sut.ShipsAreWithinBounds(board);
-
-
-            act.Should().Throw<ShipsNegativeCoordinatesException>()
-               .WithMessage(string.Join(',', invalidShips.Select(ship => ship.ToString())),
-                            $"{nameof(ShipsNegativeCoordinatesException)} should be thrown with a list of invalid Ships");
+            act.Should().Throw<CellsNegativeCoordinatesException>()
+               .WithMessage(string.Join(',', invalidCells.Select(ship => ship.ToString())),
+                            $"{nameof(CellsNegativeCoordinatesException)} should be thrown with a list of invalid Cells");
         }
 
 
-        [Theory(DisplayName = "BoardVerifier correctly verifies if Ships are within bounds of a Board")]
+        [Theory(DisplayName = "BoardVerifier correctly verifies if Cells are within bounds of a BoardSize")]
         [ClassData(typeof(ShipsWithinBoardBoundsCoordinatesClassData))]
-        public void BoardVerifier_correctly_verifies_if_Ships_are_within_bounds_of_a_Board(Board board, bool expectedResult)
+        public void BoardVerifier_correctly_verifies_if_Cells_are_within_bounds_of_a_BoardSize(BoardSize boardSize,
+            IEnumerable<Cell> cells, bool expectedResult)
         {
-            _sut.ShipsAreWithinBounds(board).Should().Be(expectedResult);
+            _sut.CellsAreWithinBounds(boardSize, cells).Should().Be(expectedResult);
         }
     }
 }

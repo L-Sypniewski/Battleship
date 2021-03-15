@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using Core.Exceptions;
 using Core.Model;
@@ -14,42 +15,40 @@ namespace Core.Services
         }
 
 
-        public bool ShipsAreWithinBounds(Board board)
+        public bool CellsAreWithinBounds(BoardSize boardSize, IEnumerable<Cell> cells)
         {
-            var (boardSize, ships) = board;
 
-            var shipsWithNegativeCoordinates = ships.Where(ShipHasCellWithNegativeCoordinates).ToArray();
-            if (shipsWithNegativeCoordinates.Any())
+            var cellsWithNegativeCoordinates = cells.Where(CellsContainsNegativeCoordinate).ToArray();
+            if (cellsWithNegativeCoordinates.Any())
             {
-                var errorMessage = string.Join(',', shipsWithNegativeCoordinates.Select(ship => ship.ToString()));
-                throw new ShipsNegativeCoordinatesException(errorMessage);
+                var errorMessage = string.Join(',', cellsWithNegativeCoordinates.Select(ship => ship.ToString()));
+                throw new CellsNegativeCoordinatesException(errorMessage);
             }
 
-            var shipsWithXCoordinatesOutOfBounds = ships.Where(ship => ShipHasCellWithXCoordinateOutOfBoundsOf(boardSize, ship));
-            var shipsWithYCoordinatesOutOfBounds = ships.Where(ship => ShipHasCellWithYCoordinateOutOfBoundsOf(boardSize, ship));
+            var cellsWithXCoordinatesOutOfBounds = cells.Where(cell => ShipHasCellWithXCoordinateOutOfBoundsOf(boardSize, cell));
+            var cellsWithYCoordinatesOutOfBounds = cells.Where(cell => ShipHasCellWithYCoordinateOutOfBoundsOf(boardSize, cell));
 
-            var outOfBoundsShips = shipsWithXCoordinatesOutOfBounds.Union(shipsWithYCoordinatesOutOfBounds).ToArray();
+            var outOfBoundsShips = cellsWithXCoordinatesOutOfBounds.Union(cellsWithYCoordinatesOutOfBounds).ToArray();
 
             return !outOfBoundsShips.Any();
         }
 
 
-        private static bool ShipHasCellWithXCoordinateOutOfBoundsOf(BoardSize boardSize, Ship ship)
+        private static bool ShipHasCellWithXCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
-            return ship.Cells.Any(cell => cell.XCoordinate > boardSize.XSize);
+            return cell.XCoordinate > boardSize.XSize;
         }
 
 
-        private static bool ShipHasCellWithYCoordinateOutOfBoundsOf(BoardSize boardSize, Ship ship)
+        private static bool ShipHasCellWithYCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
-            return ship.Cells.Any(cell => cell.YCoordinate > boardSize.YSize);
+            return cell.YCoordinate > boardSize.YSize;
         }
 
 
-        private static bool ShipHasCellWithNegativeCoordinates(Ship ship)
+        private static bool CellsContainsNegativeCoordinate(Cell cell)
         {
-            return ship.Cells.Any(cell => cell.XCoordinate < 0
-                                          || cell.YCoordinate < 0);
+            return cell.XCoordinate < 0 || cell.YCoordinate < 0;
         }
     }
 }
