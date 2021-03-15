@@ -10,8 +10,8 @@ namespace Core.Services
     public sealed class Game : IGame
     {
         private readonly IBoardInitializer _boardInitializer;
-        private readonly IBoardVerifier _boardVerifier;
         private readonly BoardSize _boardSize;
+        private readonly IBoardVerifier _boardVerifier;
         private readonly ISet<ShipConfiguration> _shipConfigurations;
 
 

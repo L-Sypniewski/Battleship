@@ -13,9 +13,9 @@ namespace CoreTests.Services
 {
     public class BoardInitializerTest
     {
-        private BoardInitializer _sut;
-        private readonly Mock<IShipPositioner> _shipPositioner = new();
         private readonly Mock<ICellVerifier> _cellVerifier = new();
+        private readonly Mock<IShipPositioner> _shipPositioner = new();
+        private BoardInitializer _sut;
 
 
         public BoardInitializerTest()

@@ -5,8 +5,8 @@ namespace CoreTests.Utils
     public class ShipConfigurationBuilder
     {
         private string _name = "";
-        private int _shipsNumber;
         private int _shipSize;
+        private int _shipsNumber;
 
 
         public ShipConfigurationBuilder WithName(string name)
