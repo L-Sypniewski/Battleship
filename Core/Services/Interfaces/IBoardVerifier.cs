@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Core.Model;
 
 namespace Core.Services
@@ -13,10 +14,11 @@ namespace Core.Services
 
 
         /// <summary>
-        ///     Checks if all <see cref="Ship" />s are withing bound of a given <see cref="Board" />
+        ///     Checks if all <see cref="Cell" />s are withing bound of a given <see cref="BoardSize" />
         /// </summary>
-        /// <param name="board"></param>
+        /// <param name="boardSize"></param>
+        /// <param name="cells"></param>
         /// <returns></returns>
-        bool ShipsAreWithinBounds(Board board);
+        bool CellsAreWithinBounds(BoardSize boardSize, IEnumerable<Cell> cells);
     }
 }

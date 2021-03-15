@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using Core.Model;
 using CoreTests.Utils;
 
@@ -12,122 +11,81 @@ namespace CoreTests.TestData.Services.BoardVerifier
         {
             yield return new object[]
             {
-                new Board(new BoardSize(10, 10),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(0, 0).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(2, 1).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(0, 0).Build(),
+                    new CellBuilder().WithCoordinates(2, 1).Build()
+                },
                 true
             };
             yield return new object[]
             {
-                new Board(new BoardSize(100, 75),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(100, 75).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(100, 75),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(100, 75).Build()
+                },
+
                 true
             };
             yield return new object[]
             {
-                new Board(new BoardSize(75, 100),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(100, 75).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(75, 100),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(100, 75).Build()
+                },
                 false
             };
             yield return new object[]
             {
-                new Board(new BoardSize(10, 10),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(10, 10).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(10, 10).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(10, 10).Build(),
+                    new CellBuilder().WithCoordinates(10, 10).Build()
+                },
                 true
             };
             yield return new object[]
             {
-                new Board(new BoardSize(10, 10),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(25, 25).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(25, 25).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(25, 25).Build(),
+                    new CellBuilder().WithCoordinates(25, 25).Build()
+                },
                 false
             };
             yield return new object[]
             {
-                new Board(new BoardSize(25, 25),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(25, 25).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(25, 25).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(25, 25),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(25, 25).Build(),
+                    new CellBuilder().WithCoordinates(25, 25).Build()
+                },
                 true
             };
             yield return new object[]
             {
-                new Board(new BoardSize(10, 10),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(0, 0).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(2, 11).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(0, 0).Build(),
+                    new CellBuilder().WithCoordinates(2, 11).Build()
+                },
                 false
             };
             yield return new object[]
             {
-                new Board(new BoardSize(10, 10),
-                          new[]
-                          {
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(100, 0).Build()
-                              }).Build(),
-                              new ShipBuilder().WithCells(new[]
-                              {
-                                  new CellBuilder().WithCoordinates(12, 8).Build()
-                              }).Build()
-                          }.ToImmutableList()),
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(100, 0).Build(),
+                    new CellBuilder().WithCoordinates(12, 8).Build()
+                },
                 false
             };
         }
