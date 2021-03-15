@@ -27,11 +27,9 @@ namespace Core.Services
 
 
         public void EndGame() => throw new System.NotImplementedException();
+        public bool IsFinished(Board board) => throw new System.NotImplementedException();
 
 
-        public bool IsFinished() => throw new System.NotImplementedException();
-
-
-        public GameMoveResult ShootAt(Cell cell) => throw new System.NotImplementedException();
+        public GameMoveResult ShootAt(Board board, Cell cell) => throw new System.NotImplementedException();
     }
 }
