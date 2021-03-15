@@ -39,13 +39,9 @@ namespace Core.Services
                 {
                     try
                     {
-                        var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipToCreate.ShipSize).ToImmutableArray();
-                        var updatedPositions = ships.SelectMany(ship => ship.Cells).ToImmutableArray().AddRange(newShipPosition);
+                        var newShip = CreateNewShip(board, shipToCreate.Name, shipToCreate.ShipSize, ships);
 
-                        var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
-                        var newShip = new Ship(shipToCreate.Name, newShipPosition);
-                        
-                        if (!doShipsIntersectEachOther)
+                        if (newShip is not null)
                         {
                             ships = ships.Add(newShip);
                             break;
@@ -70,16 +66,18 @@ namespace Core.Services
         }
 
 
-        private static Ship? CreateFor(string name, int size, Board board, IEnumerable<Ship> allCurrentlyCreatedShips,
-                                       IShipPositioner shipPositioner, ICellVerifier cellVerifier)
+        private Ship? CreateNewShip(Board board, string shipName, int shipSize, ImmutableArray<Ship> ships)
         {
-            var newShipPosition = shipPositioner.ShipPositionsFor(board, size).ToImmutableArray();
-            var updatedPositions = allCurrentlyCreatedShips.SelectMany(s => s.Cells).ToImmutableArray().AddRange(newShipPosition);
+            
+            var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipSize).ToImmutableArray();
+            var updatedPositions = ships.SelectMany(ship => ship.Cells)
+                                        .ToImmutableArray()
+                                        .AddRange(newShipPosition);
 
-            var doShipsIntersectEachOther = cellVerifier.CellsIntersect(updatedPositions);
-            return !doShipsIntersectEachOther
-                ? new Ship(name, newShipPosition)
-                : null;
+            var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
+            var newShip = new Ship(shipName, newShipPosition);
+
+            return doShipsIntersectEachOther ? null : newShip;
         }
     }
 }
