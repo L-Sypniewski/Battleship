@@ -6,7 +6,7 @@ namespace Core.Services
     {
         Board StartGame();
         void EndGame();
-        bool IsFinished();
-        GameMoveResult ShootAt(Cell cell);
+        bool IsFinished(Board board);
+        GameMoveResult ShootAt(Board board, Cell cell);
     }
 }
