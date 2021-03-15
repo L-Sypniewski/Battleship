@@ -17,15 +17,17 @@ namespace Core.Services
 
         public bool CellsAreWithinBounds(BoardSize boardSize, IEnumerable<Cell> cells)
         {
-            var cellsWithNegativeCoordinates = cells.Where(CellsContainsNegativeCoordinate).ToArray();
+            var cellsArray = cells.ToArray();
+
+            var cellsWithNegativeCoordinates = cellsArray.Where(CellsContainsNegativeCoordinate).ToArray();
             if (cellsWithNegativeCoordinates.Any())
             {
                 var errorMessage = string.Join(',', cellsWithNegativeCoordinates.Select(ship => ship.ToString()));
                 throw new CellsNegativeCoordinatesException(errorMessage);
             }
 
-            var cellsWithXCoordinatesOutOfBounds = cells.Where(cell => ShipHasCellWithXCoordinateOutOfBoundsOf(boardSize, cell));
-            var cellsWithYCoordinatesOutOfBounds = cells.Where(cell => ShipHasCellWithYCoordinateOutOfBoundsOf(boardSize, cell));
+            var cellsWithXCoordinatesOutOfBounds = cellsArray.Where(cell => CellHasXCoordinateOutOfBoundsOf(boardSize, cell));
+            var cellsWithYCoordinatesOutOfBounds = cellsArray.Where(cell => CellHasYCoordinateOutOfBoundsOf(boardSize, cell));
 
             var outOfBoundsShips = cellsWithXCoordinatesOutOfBounds.Union(cellsWithYCoordinatesOutOfBounds).ToArray();
 
@@ -33,13 +35,13 @@ namespace Core.Services
         }
 
 
-        private static bool ShipHasCellWithXCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
+        private static bool CellHasXCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
             return cell.XCoordinate > boardSize.XSize;
         }
 
 
-        private static bool ShipHasCellWithYCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
+        private static bool CellHasYCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
             return cell.YCoordinate > boardSize.YSize;
         }
