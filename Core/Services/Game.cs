@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Core.Model;
 
 namespace Core.Services
@@ -27,7 +28,11 @@ namespace Core.Services
 
 
         public void EndGame() => throw new System.NotImplementedException();
-        public bool IsFinished(Board board) => throw new System.NotImplementedException();
+
+
+        public bool IsFinished(Board board) => board.Ships
+                                                    .SelectMany(ship => ship.Cells)
+                                                    .All(cell => cell.IsShot);
 
 
         public GameMoveResult ShootAt(Board board, Cell cell) => throw new System.NotImplementedException();
