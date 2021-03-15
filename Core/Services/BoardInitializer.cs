@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -17,7 +18,8 @@ namespace Core.Services
         {
             _shipPositioner = shipPositioner;
             _cellVerifier = cellVerifier;
-            _maxAttempts = maxAttempts;
+            _maxAttempts = Math.Max(1, maxAttempts);
+            ;
         }
 
 
