@@ -8,7 +8,7 @@ namespace Core.Model
     public sealed record Ship(string Name, IImmutableList<Cell> Cells)
     {
         public bool Equals(Ship? other) => Name.Equals(other?.Name) ||
-                                           Cells.SequenceEqual(other?.Cells ?? new ImmutableArray<Cell>());
+                                           Cells.SequenceEqual(other?.Cells ?? Enumerable.Empty<Cell>().ToImmutableArray());
 
 
         private bool PrintMembers(StringBuilder builder)
