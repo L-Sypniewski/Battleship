@@ -1,6 +1,6 @@
 ﻿using Core.Model;
 
-namespace CoreTests.Utils
+namespace CoreTests.TestUtils
 {
     public class ShipConfigurationBuilder
     {
