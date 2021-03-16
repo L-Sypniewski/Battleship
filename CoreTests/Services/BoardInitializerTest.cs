@@ -145,5 +145,27 @@ namespace CoreTests.Services
             act.Should().Throw<CannotInitializeBoardException>(
                 "if Ship positions cannot be created then Board cannot be initialized");
         }
+
+
+        [Theory(DisplayName = "Cells without Ships are correctly created")]
+        [ClassData(typeof(CreatingCellsWithoutShipsClassData))]
+        public void Cells_without_Ships_are_correctly_created(BoardSize boardSize,
+                                                              Cell[][] positionsCreatedByPositioner,
+                                                              Cell[] expectedCellsWithoutShips)
+        {
+            const int numberOfShips = 2;
+            SetupCellIntersectionVerifierToReturn(false);
+            _shipPositioner.SetupSequence(mock => mock.ShipPositionsFor(It.IsAny<Board>(), It.IsAny<int>()))
+                           .Returns(positionsCreatedByPositioner[0])
+                           .Returns(positionsCreatedByPositioner[1]);
+
+            var shipsConfigurations =
+                new HashSet<ShipConfiguration>(new[] {new ShipConfigurationBuilder().WithShipsNumber(numberOfShips).Build()});
+            var initializedBoard = _sut.InitializedBoard(boardSize, shipsConfigurations);
+
+
+            initializedBoard.CellsWithoutShips.Should().BeEquivalentTo(expectedCellsWithoutShips,
+                                                                       "created Cells without Ships should occupy cells where Positioner did not put Ship");
+        }
     }
 }
