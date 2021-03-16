@@ -30,8 +30,7 @@ namespace Core.Model
             var doesCellBelongsToShip = DoesCellBelongToShip(Ships, cellToCheck);
             if (!doesCellBelongsToShip)
             {
-                var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => cell.XCoordinate == cellToCheck.XCoordinate
-                                                                                && cell.YCoordinate == cellToCheck.YCoordinate);
+                var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => CompareCellsWithoutIsShot(cell, cellToCheck));
                 if (cellWithoutShip is null)
                 {
                     return Model.CellState.Clear;
@@ -41,16 +40,14 @@ namespace Core.Model
             }
 
             var allShipCells = Ships.SelectMany(ship => ship.Cells).ToArray();
-            var cellFromBoard = allShipCells.Single(cell => cell.XCoordinate == cellToCheck.XCoordinate &&
-                                                            cell.YCoordinate == cellToCheck.YCoordinate);
+            var cellFromBoard = allShipCells.Single(cell => CompareCellsWithoutIsShot(cell, cellToCheck));
             if (!cellFromBoard.IsShot)
             {
                 return Model.CellState.Clear;
             }
 
-            var shipForACell = Ships.Single(ship => ship.Cells.SingleOrDefault(
-                                                cell => cell.XCoordinate == cellToCheck.XCoordinate &&
-                                                        cell.YCoordinate == cellToCheck.YCoordinate) != null);
+            var shipForACell =
+                Ships.Single(ship => ship.Cells.SingleOrDefault(cell => CompareCellsWithoutIsShot(cell, cellToCheck)) != null);
 
             return shipForACell.IsSunk ? Model.CellState.Sunk : Model.CellState.Hit;
         }
@@ -59,8 +56,11 @@ namespace Core.Model
         private static bool DoesCellBelongToShip(IImmutableList<Ship> ships, Cell cellToCheck)
         {
             var allShipCells = ships.SelectMany(ship => ship.Cells).ToArray();
-            return allShipCells.Any(cell => cell.XCoordinate == cellToCheck.XCoordinate &&
-                                            cell.YCoordinate == cellToCheck.YCoordinate);
+            return allShipCells.Any(cell => CompareCellsWithoutIsShot(cell, cellToCheck));
         }
+
+
+        private static bool CompareCellsWithoutIsShot(Cell lhs, Cell rhs) => lhs.XCoordinate == rhs.XCoordinate &&
+                                                                             lhs.YCoordinate == rhs.YCoordinate;
     }
 }
