@@ -30,7 +30,8 @@ namespace Core.Model
             var doesCellBelongsToShip = DoesCellBelongToShip(Ships, cellToCheck);
             if (!doesCellBelongsToShip)
             {
-                var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => cell == cellToCheck);
+                var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => cell.XCoordinate == cellToCheck.XCoordinate
+                                                                                && cell.YCoordinate == cellToCheck.YCoordinate);
                 if (cellWithoutShip is null)
                 {
                     return Model.CellState.Clear;
@@ -40,13 +41,16 @@ namespace Core.Model
             }
 
             var allShipCells = Ships.SelectMany(ship => ship.Cells).ToArray();
-            var cellFromBoard = allShipCells.Single(cell => cell == cellToCheck);
+            var cellFromBoard = allShipCells.Single(cell => cell.XCoordinate == cellToCheck.XCoordinate &&
+                                                            cell.YCoordinate == cellToCheck.YCoordinate);
             if (!cellFromBoard.IsShot)
             {
                 return Model.CellState.Clear;
             }
 
-            var shipForACell = Ships.Single(ship => ship.Cells.Contains(cellToCheck));
+            var shipForACell = Ships.Single(ship => ship.Cells.SingleOrDefault(
+                                                cell => cell.XCoordinate == cellToCheck.XCoordinate &&
+                                                        cell.YCoordinate == cellToCheck.YCoordinate) != null);
 
             return shipForACell.IsSunk ? Model.CellState.Sunk : Model.CellState.Hit;
         }
@@ -55,7 +59,8 @@ namespace Core.Model
         private static bool DoesCellBelongToShip(IImmutableList<Ship> ships, Cell cellToCheck)
         {
             var allShipCells = ships.SelectMany(ship => ship.Cells).ToArray();
-            return allShipCells.Contains(cellToCheck);
+            return allShipCells.Any(cell => cell.XCoordinate == cellToCheck.XCoordinate &&
+                                            cell.YCoordinate == cellToCheck.YCoordinate);
         }
     }
 }
