@@ -29,13 +29,13 @@ namespace Core.Services
 
         private static bool CellHasXCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
-            return cell.XCoordinate > boardSize.XSize;
+            return cell.XCoordinate >= boardSize.XSize;
         }
 
 
         private static bool CellHasYCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
         {
-            return cell.YCoordinate > boardSize.YSize;
+            return cell.YCoordinate >= boardSize.YSize;
         }
 
 
