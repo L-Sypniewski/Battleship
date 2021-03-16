@@ -26,7 +26,15 @@ namespace CoreTests.TestData.Services.BoardVerifier
                 {
                     new CellBuilder().WithCoordinates(100, 75).Build()
                 },
-
+                false
+            };
+            yield return new object[]
+            {
+                new BoardSize(75, 100),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(74, 99).Build()
+                },
                 true
             };
             yield return new object[]
@@ -45,6 +53,16 @@ namespace CoreTests.TestData.Services.BoardVerifier
                 {
                     new CellBuilder().WithCoordinates(10, 10).Build(),
                     new CellBuilder().WithCoordinates(10, 10).Build()
+                },
+                false
+            };
+            yield return new object[]
+            {
+                new BoardSize(10, 10),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(9, 9).Build(),
+                    new CellBuilder().WithCoordinates(9, 9).Build()
                 },
                 true
             };
@@ -65,6 +83,16 @@ namespace CoreTests.TestData.Services.BoardVerifier
                 {
                     new CellBuilder().WithCoordinates(25, 25).Build(),
                     new CellBuilder().WithCoordinates(25, 25).Build()
+                },
+                false
+            };
+            yield return new object[]
+            {
+                new BoardSize(25, 26),
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(24, 25).Build(),
+                    new CellBuilder().WithCoordinates(23, 25).Build()
                 },
                 true
             };
