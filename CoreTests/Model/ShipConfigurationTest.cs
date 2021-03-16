@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Core.Model;
-using CoreTests.Utils;
+using CoreTests.TestUtils;
 using FluentAssertions;
 using Xunit;
 

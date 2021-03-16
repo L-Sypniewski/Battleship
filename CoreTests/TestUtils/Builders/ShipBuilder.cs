@@ -2,7 +2,7 @@ using System;
 using System.Collections.Immutable;
 using Core.Model;
 
-namespace CoreTests.Utils
+namespace CoreTests.TestUtils
 {
     public class ShipBuilder
     {
