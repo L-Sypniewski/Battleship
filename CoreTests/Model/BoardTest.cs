@@ -1,4 +1,5 @@
-﻿using Core.Model;
+﻿using System.Collections.Immutable;
+using Core.Model;
 using CoreTests.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -10,9 +11,10 @@ namespace CoreTests.Model
         [Theory(DisplayName = "Board returns correct state of a given Cell")]
         [InlineData(0, 0, CellState.Sunk)]
         [InlineData(1, 0, CellState.Sunk)]
-        [InlineData(1, 1, CellState.Hit)]
-        [InlineData(1, 2, CellState.Clear)]
         [InlineData(0, 1, CellState.Clear)]
+        [InlineData(1, 1, CellState.Hit)]
+        [InlineData(0, 2, CellState.Miss)]
+        [InlineData(1, 2, CellState.Clear)]
         public void Board_returns_correct_state_of_a_given_Cell(int x, int y, CellState expectedCellState)
         {
             var board = CreateTestBoard();
@@ -40,8 +42,14 @@ namespace CoreTests.Model
                               new CellBuilder().WithCoordinates(1, 2).Build(),
                           }).Build();
 
+            var cellsWithoutShips = new[]
+            {
+                new CellBuilder().WithCoordinates(0, 1).Build(),
+                new CellBuilder().WithCoordinates(0, 2).WithIsShot(true).Build(),
+            };
             return new BoardBuilder().WithSize(boardSize)
                                      .WithShips(new[] {sunkShip, hitShip})
+                                     .WithCellsWithoutShips(cellsWithoutShips)
                                      .Build();
         }
     }
