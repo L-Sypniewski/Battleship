@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Core.Model;
 
-namespace CoreTests.Utils
+namespace CoreTests.TestUtils
 {
     public class BoardBuilder
     {
