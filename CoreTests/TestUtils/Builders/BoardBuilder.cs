@@ -9,6 +9,7 @@ namespace CoreTests.TestUtils
     {
         private BoardSize _boardSize = new(1, 1);
         private ImmutableArray<Ship> _ships = Enumerable.Empty<Ship>().ToImmutableArray();
+        private ImmutableArray<Cell> _cellsWithoutShips = Enumerable.Empty<Cell>().ToImmutableArray();
 
 
         public BoardBuilder WithSize(BoardSize size)
@@ -25,9 +26,16 @@ namespace CoreTests.TestUtils
         }
 
 
+        public BoardBuilder WithCellsWithoutShips(IEnumerable<Cell> cellsWithoutShips)
+        {
+            _cellsWithoutShips = cellsWithoutShips.ToImmutableArray();
+            return this;
+        }
+
+
         public Board Build()
         {
-            return new(_boardSize, _ships);
+            return new(_boardSize, _ships, _cellsWithoutShips);
         }
     }
 }
