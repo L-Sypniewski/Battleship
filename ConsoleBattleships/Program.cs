@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Immutable;
+using Core.Model;
 
 namespace ConsoleBattleships
 {
@@ -6,7 +8,17 @@ namespace ConsoleBattleships
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            new BoardDrawer().Draw(GetBoard());
+            Console.ReadKey();
+        }
+
+
+        private static Board GetBoard()
+        {
+            var boardSize = new BoardSize(5, 5);
+
+
+            return new Board(boardSize, ImmutableArray<Ship>.Empty);
         }
     }
 }
