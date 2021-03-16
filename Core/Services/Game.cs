@@ -34,9 +34,7 @@ namespace Core.Services
         public void EndGame() => throw new NotImplementedException();
 
 
-        public bool IsFinished(Board board) => board.Ships
-                                                    .SelectMany(ship => ship.Cells)
-                                                    .All(cell => cell.IsShot);
+        public bool IsFinished(Board board) => board.Ships.All(ship => ship.IsSunk);
 
 
         public GameMoveResult ShootAt(Board board, Cell cell)
