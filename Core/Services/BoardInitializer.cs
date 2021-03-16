@@ -24,14 +24,14 @@ namespace Core.Services
 
         public Board InitializedBoard(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations)
         {
-            var board = new Board(boardSize, new ImmutableArray<Ship>());
+            var board = new Board(boardSize, new ImmutableArray<Ship>(), new ImmutableArray<Cell>());
 
 
             var shipsToCreate = shipConfigurations
                 .SelectMany(config => Enumerable.Range(0, config.ShipsNumber).Select(_ => new {config.Name, config.ShipSize}));
 
-            var ships = Enumerable.Empty<Ship>().ToImmutableArray();
 
+            var ships = Enumerable.Empty<Ship>().ToImmutableArray();
             foreach (var shipToCreate in shipsToCreate)
             {
                 var counter = 0;
@@ -61,8 +61,40 @@ namespace Core.Services
                 }
             }
 
+            var cellsWithoutShips = CreateCellsWithoutShips(boardSize, ships);
 
-            return new Board(boardSize, ships);
+            return new Board(boardSize, ships, cellsWithoutShips);
+        }
+
+
+        private static IImmutableList<Cell> CreateCellsWithoutShips(BoardSize boardSize,
+                                                                    IImmutableList<Ship> ships)
+        {
+            var rows = Enumerable.Range(0, boardSize.XSize);
+            var columns = Enumerable.Range(0, boardSize.YSize);
+
+            var cellsWithoutShips = new List<Cell>();
+
+            foreach (var row in rows)
+            {
+                foreach (var column in columns)
+                {
+                    var currentCell = new Cell(row, column, false);
+                    if (!DoesCellBelongToShip(ships, currentCell))
+                    {
+                        cellsWithoutShips.Add(currentCell);
+                    }
+                }
+            }
+
+            return cellsWithoutShips.ToImmutableArray();
+        }
+
+
+        private static bool DoesCellBelongToShip(IImmutableList<Ship> ships, Cell cellToCheck)
+        {
+            var allShipCells = ships.SelectMany(ship => ship.Cells).ToArray();
+            return allShipCells.Contains(cellToCheck);
         }
 
 
