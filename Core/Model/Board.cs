@@ -24,6 +24,8 @@ namespace Core.Model
 
         public override int GetHashCode() => HashCode.Combine(Size, Ships, CellsWithoutShips);
 
+        public IImmutableList<Cell> AllCells => Ships.SelectMany(ship => ship.Cells).Union(CellsWithoutShips).ToImmutableArray();
+
 
         public CellState CellState(Cell cellToCheck)
         {
