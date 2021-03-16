@@ -20,5 +20,27 @@ namespace Core.Model
 
 
         public override int GetHashCode() => HashCode.Combine(Size, Ships);
+
+
+        public CellState CellState(Cell cellToCheck)
+        {
+            var allCells = Ships.SelectMany(ship => ship.Cells).ToArray();
+            
+            var doesCellBelongsToShip = allCells.Contains(cellToCheck);
+            if (!doesCellBelongsToShip)
+            {
+                return Model.CellState.Clear;
+            }
+
+            var cellFromBoard = allCells.Single(cell => cell == cellToCheck);
+            if (!cellFromBoard.IsShot)
+            {
+                return Model.CellState.Clear;
+            }
+
+            var shipForACell = Ships.Single(ship => ship.Cells.Contains(cellToCheck));
+
+            return shipForACell.IsSunk ? Model.CellState.Sunk : Model.CellState.Hit;
+        }
     }
 }
