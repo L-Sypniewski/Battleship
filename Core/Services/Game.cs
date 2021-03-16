@@ -14,6 +14,8 @@ namespace Core.Services
         private readonly IBoardVerifier _boardVerifier;
         private readonly ISet<ShipConfiguration> _shipConfigurations;
 
+        private static readonly IEqualityComparer<Cell> _cellEqualityComparer = new CellIgnoringIsShotComparer();
+
 
         public Game(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations,
                     IBoardInitializer boardInitializer, IBoardVerifier boardVerifier)
@@ -46,7 +48,7 @@ namespace Core.Services
             }
 
             var shotShip = ShotShip(board, cell);
-            var updatedBoard = UpdatedBoard(board, cell);
+            var updatedBoard = UpdatedBoard(board, cell, shotShip);
             return new GameMoveResult(updatedBoard, shotShip);
         }
 
@@ -54,19 +56,52 @@ namespace Core.Services
         private static Ship? ShotShip(Board oldBoard, Cell cellToShot)
         {
             var shipWithCellToShot = ShipContaining(oldBoard.Ships, cellToShot);
+            if (shipWithCellToShot is null)
+            {
+                return null;
+            }
+
             var updatedCells = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
             return shipWithCellToShot with {Cells = updatedCells};
         }
 
 
-        private static Board UpdatedBoard(Board oldBoard, Cell cellToShot)
+        private static Board UpdatedBoard(Board oldBoard, Cell cellToShot, Ship? shotShip)
         {
-            var allShips = oldBoard.Ships;
+            if (shotShip is not null)
+            {
+                var allShips = oldBoard.Ships;
 
-            var shipWithCellToShot = ShipContaining(allShips, cellToShot);
-            var updatedCells = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
-            var updatedShips = UpdatedShips(shipWithCellToShot, allShips, updatedCells);
-            return oldBoard with {Ships = updatedShips};
+                var shipWithCellToShot = shotShip with
+                {
+                    Cells = shotShip.Cells.Select(x => x with {IsShot = false}).ToImmutableArray()
+                };
+
+                var updatedCellsWithShips = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
+                var updatedShips = UpdatedShips(shipWithCellToShot, allShips, updatedCellsWithShips);
+                return oldBoard with {Ships = updatedShips};
+            }
+
+            var updatedCellsWithoutShips = UpdatedCellsWithoutShips(oldBoard, cellToShot);
+            return oldBoard with {CellsWithoutShips = updatedCellsWithoutShips};
+        }
+
+
+        private static IImmutableList<Cell> UpdatedCellsWithoutShips(Board oldBoard, Cell cellToShot)
+        {
+            var oldCells = oldBoard.CellsWithoutShips;
+            var cellToUpdate = oldCells.Single(cell => cell.XCoordinate == cellToShot.XCoordinate ||
+                                                       cell.YCoordinate == cellToShot.YCoordinate);
+
+            if (cellToUpdate.IsShot)
+            {
+                throw new CannotShotAlreadyShotCellException();
+            }
+
+            var indexOfCellToUpdate = oldCells.IndexOf(cellToShot);
+            var cellsWithoutOld = oldCells.RemoveAt(indexOfCellToUpdate);
+            var updatedCells = cellsWithoutOld.Insert(indexOfCellToUpdate, cellToUpdate with {IsShot = true});
+            return updatedCells;
         }
 
 
@@ -87,7 +122,7 @@ namespace Core.Services
         {
             var cellsFromShipToShot = shipWithCellToShot.Cells;
 
-            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cellToShot);
+            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cellToShot, _cellEqualityComparer);
 
             var cellToShotAlreadyShot = cellsFromShipToShot[indexOfCellToRemove].IsShot;
             if (cellToShotAlreadyShot)
@@ -101,9 +136,9 @@ namespace Core.Services
         }
 
 
-        private static Ship ShipContaining(IEnumerable<Ship> ships, Cell cell)
+        private static Ship? ShipContaining(IEnumerable<Ship> ships, Cell cell)
         {
-            return ships.Single(ship => ship.Cells.Contains(cell));
+            return ships.SingleOrDefault(ship => ship.Cells.Contains(cell, _cellEqualityComparer));
         }
     }
 }
