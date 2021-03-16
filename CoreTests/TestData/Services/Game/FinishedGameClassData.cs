@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Core.Model;
-using CoreTests.Utils;
+using CoreTests.TestUtils;
 
 namespace CoreTests.TestData.Services.Game
 {

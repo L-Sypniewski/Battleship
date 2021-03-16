@@ -4,7 +4,7 @@ using Core.Exceptions;
 using Core.Model;
 using Core.Services;
 using CoreTests.TestData.Services.Game;
-using CoreTests.Utils;
+using CoreTests.TestUtils;
 using FluentAssertions;
 using Moq;
 using Xunit;

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using CoreTests.Utils;
+using CoreTests.TestUtils;
 
 namespace CoreTests.TestData.Services.GameRulesCellVerifier
 {
