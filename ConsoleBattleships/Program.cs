@@ -6,7 +6,7 @@ using Core.Services;
 
 namespace ConsoleBattleships
 {
-    internal class Program
+    internal static class Program
     {
         private const int MaxAttempts = 20000;
         private static BoardSize BoardSize => new(10,10);
@@ -22,23 +22,24 @@ namespace ConsoleBattleships
         }
 
 
-        private static Game CreateGame()
+        private static Game CreateGame() // DI container would be an overkill here
         {
             var shipConfigurations = CreateShipConfigurations();
 
-            var cellVerifier = new CellVerifier();
+            var boardVerifier = new BoardVerifier();
             var shipPositioner = new ShipPositioner(MaxAttempts, new ShipOrientationRandomizer(),
-                                                    new CellRandomizer(), new BoardVerifier(),
+                                                    new CellRandomizer(), boardVerifier,
                                                     new StandardBattleshipGameRulesCellVerifier());
-            var boardInitializer = new BoardInitializer(shipPositioner, cellVerifier, MaxAttempts);
+            var boardInitializer = new BoardInitializer(shipPositioner, new CellVerifier(), MaxAttempts);
 
-            var game = new Game(BoardSize, shipConfigurations, boardInitializer, new BoardVerifier());
+            var game = new Game(BoardSize, shipConfigurations, boardInitializer, boardVerifier);
             return game;
         }
 
 
-        private static HashSet<ShipConfiguration> CreateShipConfigurations()
+        private static HashSet<ShipConfiguration> CreateShipConfigurations() 
         {
+            // Might be read from a file using for example IConfiguration with options pattern
             var battleshipConfiguration = new ShipConfiguration("Battleship", 5, 1);
             var destroyerConfiguration = new ShipConfiguration("Destroyer", 4, 2);
             var shipConfigurations = new HashSet<ShipConfiguration>(new[] {battleshipConfiguration, destroyerConfiguration});
