@@ -21,6 +21,6 @@ project file should be passed:
 dotnet run --project <folder containing solution>/ConsoleBattleships/ConsoleBattleships.csproj 
 ```
 
-###Test coverage and maintainability
+### Test coverage and maintainability
 [![Coverage Status](https://coveralls.io/repos/github/L-Sypniewski/Battleship/badge.svg?branch=master)](https://coveralls.io/github/L-Sypniewski/Battleship?branch=master)
 [![Maintainability](https://api.codeclimate.com/v1/badges/36304294bd82f78a6880/maintainability)](https://codeclimate.com/github/L-Sypniewski/Battleship/maintainability)
