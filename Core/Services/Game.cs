@@ -26,10 +26,7 @@ namespace Core.Services
         }
 
 
-        public Board StartGame()
-        {
-            return _boardInitializer.InitializedBoard(_boardSize, _shipConfigurations);
-        }
+        public Board StartGame() => _boardInitializer.InitializedBoard(_boardSize, _shipConfigurations);
 
 
         public bool IsFinished(Board board) => board.Ships.All(ship => ship.IsSunk);
@@ -51,7 +48,7 @@ namespace Core.Services
 
         private static Ship? ShotShip(Board oldBoard, Cell cellToShot)
         {
-            var shipWithCellToShot = ShipContaining(oldBoard.Ships, cellToShot);
+            var shipWithCellToShot = ShipContaining(cellToShot, oldBoard.Ships);
 
             if (shipWithCellToShot is null)
             {
@@ -108,26 +105,24 @@ namespace Core.Services
         }
 
 
-        private static IImmutableList<Cell> UpdatedCellsFrom(Ship shipWithCellToShot,
-                                                             Cell cellToShot)
+        private static IImmutableList<Cell> UpdatedCellsFrom(Ship shipWithCellToShot, Cell cellToShot)
         {
             var cellsFromShipToShot = shipWithCellToShot.Cells;
 
-            var indexOfCellToRemove = cellsFromShipToShot.IndexOf(cellToShot, _cellEqualityComparer);
+            var indexOfCellToUpdate = cellsFromShipToShot.IndexOf(cellToShot, _cellEqualityComparer);
 
-            var cellToShotAlreadyShot = cellsFromShipToShot[indexOfCellToRemove].IsShot;
+            var cellToShotAlreadyShot = cellsFromShipToShot[indexOfCellToUpdate].IsShot;
             if (cellToShotAlreadyShot)
             {
                 throw new CannotShotAlreadyShotCellException();
             }
 
-            var cellsWithRemovedCellToShoot = cellsFromShipToShot.Remove(cellToShot);
-
-            return cellsWithRemovedCellToShoot.Insert(indexOfCellToRemove, cellToShot with {IsShot = true});
+            return cellsFromShipToShot.WithReplaced(cellToShot with {IsShot = true},
+                                                    cell => _cellEqualityComparer.Equals(cell, cellToShot));
         }
 
 
-        private static Ship? ShipContaining(IEnumerable<Ship> ships, Cell cell)
+        private static Ship? ShipContaining(Cell cell, IEnumerable<Ship> ships)
         {
             return ships.SingleOrDefault(ship => ship.Cells.Contains(cell, _cellEqualityComparer));
         }
