@@ -88,7 +88,7 @@ namespace Core.Services
         private static Board UpdatedBoardIfNoShipShot(Board oldBoard, Cell cellToShot)
         {
             var oldCells = oldBoard.CellsWithoutShips;
-            var cellToUpdate = oldCells.Single(cell => new CellIgnoringIsShotComparer().Equals(cell, cellToShot));
+            var cellToUpdate = oldCells.Single(cell => _cellEqualityComparer.Equals(cell, cellToShot));
 
             if (cellToUpdate.IsShot)
             {
