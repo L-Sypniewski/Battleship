@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using ConsoleBattleships.Services;
-using ConsoleBattleships.Services.Interfaces;
 using Core.Model;
 using Core.Services;
 
 namespace ConsoleBattleships
 {
-    class Program
+    internal class Program
     {
         private const int MaxAttempts = 20;
 
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var game = CreateGame();
             var gameConsole = new GameConsole(new BoardDrawer(), game, new InputToCellConverter());
-           
-             gameConsole.Play();
+
+            gameConsole.Play();
             Console.ReadKey();
         }
 

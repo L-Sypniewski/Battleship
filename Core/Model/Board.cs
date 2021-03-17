@@ -8,6 +8,9 @@ namespace Core.Model
     public sealed record Board(BoardSize Size, IImmutableList<Ship> Ships,
                                IImmutableList<Cell> CellsWithoutShips)
     {
+        public IImmutableList<Cell> AllCells => Ships.SelectMany(ship => ship.Cells).Union(CellsWithoutShips).ToImmutableArray();
+
+
         public bool Equals(Board? other) => Size.Equals(other?.Size) &&
                                             Ships.SequenceEqual(other.Ships) &&
                                             CellsWithoutShips.SequenceEqual(other.CellsWithoutShips);
@@ -23,8 +26,6 @@ namespace Core.Model
 
 
         public override int GetHashCode() => HashCode.Combine(Size, Ships, CellsWithoutShips);
-
-        public IImmutableList<Cell> AllCells => Ships.SelectMany(ship => ship.Cells).Union(CellsWithoutShips).ToImmutableArray();
 
 
         public CellState CellState(Cell cellToCheck)
