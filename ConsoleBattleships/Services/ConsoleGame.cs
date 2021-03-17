@@ -80,7 +80,8 @@ namespace ConsoleBattleships.Services
                 var result = _game.ShootAt(board, cellToShot);
                 return result;
             }
-            catch (Exception exception) when (exception is CannotMakeOutOfBoundsShotException 
+            catch (Exception exception) when (exception is CannotMakeOutOfBoundsShotException
+                                              || exception is CellsNegativeCoordinatesException
                                               || exception is CannotShotAlreadyShotCellException)
             {
                 var errorMessage = ErrorMessageFor(exception);
@@ -99,7 +100,7 @@ namespace ConsoleBattleships.Services
             var hitShip = result.HitShip;
             if (hitShip != null)
             {
-                Console.WriteLine($"\nYou hit a Ship");
+                Console.WriteLine($"\nYou hit a ship");
                 if (hitShip.IsSunk)
                 {
                     Console.WriteLine($"The ship of type {hitShip.Name} is sunk");
@@ -121,7 +122,7 @@ namespace ConsoleBattleships.Services
         {
             return exception switch
             {
-                CannotMakeOutOfBoundsShotException => "Cannot make a shot outside of board.",
+                CannotMakeOutOfBoundsShotException or CellsNegativeCoordinatesException => "Cannot make a shot outside of board.",
                 CannotShotAlreadyShotCellException => "Cannot shoot at already shot cell.",
                 _ => "Unknown error"
             };
