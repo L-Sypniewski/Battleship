@@ -15,7 +15,7 @@ namespace ConsoleBattleships.Services
                 return null;
             }
 
-            const string regex = "^[Aa-zA-Z]{1,}[1-9]{1,}$";
+            const string regex = "^[Aa-zA-Z]{1,}\\d{1,}$";
             var inputIsLettersFollowedByNumber = Regex.IsMatch(input, regex, RegexOptions.Multiline);
 
             if (!inputIsLettersFollowedByNumber)
