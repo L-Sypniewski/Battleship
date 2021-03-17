@@ -7,14 +7,14 @@ using Core.Utils;
 
 namespace ConsoleBattleships.Services
 {
-    public class GameConsole
+    public class ConsoleGame
     {
         private readonly IBoardDrawer _boardDrawer;
         private readonly IGame _game;
         private readonly IInputToCellConverter _inputToCellConverter;
 
 
-        public GameConsole(IBoardDrawer boardDrawer, IGame game, IInputToCellConverter inputToCellConverter)
+        public ConsoleGame(IBoardDrawer boardDrawer, IGame game, IInputToCellConverter inputToCellConverter)
         {
             _boardDrawer = boardDrawer;
             _game = game;
@@ -33,7 +33,7 @@ namespace ConsoleBattleships.Services
 
                 _boardDrawer.Draw(board);
 
-                var cellToShot = GetCellToShotAt();
+                var cellToShot = AskForCellToShotAt();
 
                 Console.WriteLine();
 
@@ -56,13 +56,13 @@ namespace ConsoleBattleships.Services
         private static void DrawSeparator() => Console.WriteLine(new string('*', 10));
 
 
-        private Cell GetCellToShotAt()
+        private Cell AskForCellToShotAt()
         {
-            Console.WriteLine("Choose a cell to shoot");
+            Console.WriteLine("Choose a cell to shoot at");
             do
             {
                 var cellToShotInput = Console.ReadLine();
-                var cellToShot = _inputToCellConverter.ConvertedFrom(cellToShotInput ?? "");
+                var cellToShot = _inputToCellConverter.ConvertedFrom(cellToShotInput);
                 if (cellToShot != null)
                 {
                     return cellToShot;
@@ -77,18 +77,18 @@ namespace ConsoleBattleships.Services
         {
             try
             {
-                var result = _game.ShootAt(board, cellToShot!);
+                var result = _game.ShootAt(board, cellToShot);
                 return result;
             }
-            catch (Exception exception) when (exception is CannotMakeOutOfBoundsShotException ||
-                                              exception is CannotShotAlreadyShotCellException)
+            catch (Exception exception) when (exception is CannotMakeOutOfBoundsShotException 
+                                              || exception is CannotShotAlreadyShotCellException)
             {
                 var errorMessage = ErrorMessageFor(exception);
                 var cellCoordinatesText = $"{( cellToShot.XCoordinate + 1 ).ToColumnName()}{cellToShot.YCoordinate + 1}";
 
                 Console.WriteLine($"{errorMessage}\nInvalid cell: {cellCoordinatesText}\n");
 
-                cellToShot = GetCellToShotAt();
+                cellToShot = AskForCellToShotAt();
                 return MakeShot(ref cellToShot, board);
             }
         }

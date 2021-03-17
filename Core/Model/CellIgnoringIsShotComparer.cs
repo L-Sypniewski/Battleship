@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.Model;
 
-namespace Core.Services
+namespace Core.Model
 {
     public sealed class CellIgnoringIsShotComparer : IEqualityComparer<Cell>
     {
