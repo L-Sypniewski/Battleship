@@ -41,7 +41,7 @@ namespace ConsoleBattleships.Services
 
         private static void DrawBorder(Board board)
         {
-            Console.Write("{0,-4}", "");
+            Console.Write("{0,-3}", "");
             var columnsNumber = board.Size.XSize;
             var numberOfDashes = columnsNumber * 4 + 1;
             var dashes = new string('-', numberOfDashes);
