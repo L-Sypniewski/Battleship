@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
-using ConsoleBattleships.Services;
+using ConsoleBattleships.Services.Interfaces;
 using Core.Model;
 using Core.Utils;
 
-namespace ConsoleBattleships
+namespace ConsoleBattleships.Services
 {
     public class BoardDrawer : IBoardDrawer
     {
@@ -36,7 +36,6 @@ namespace ConsoleBattleships
         private static void DrawUpperBorder(Board board)
         {
             DrawBorder(board);
-            // Console.WriteLine();
         }
 
 
@@ -64,12 +63,23 @@ namespace ConsoleBattleships
 
         private static void DrawRow(Board board, int rowNumber)
         {
-            var allCellsInRow = board.Ships
-                                     .SelectMany(ship => ship.Cells)
+            var allCellsInRow = board.AllCells
                                      .Where(cell => cell.YCoordinate == rowNumber - 1)
-                                     .ToArray();
+                                     .OrderBy(x => x.XCoordinate)
+                                     .ThenBy(x => x.YCoordinate);
+
+
             Console.Write("{0,2}", rowNumber);
             Console.Write("{0,2}", "|");
+
+            foreach (var cell in allCellsInRow)
+            {
+                var cellState = board.CellState(cell);
+                var symbol = SymbolFor(cellState);
+                Console.Write("{0,2}", symbol);
+                Console.Write("{0,2}", "|");
+            }
+
             Console.WriteLine();
         }
 
@@ -77,6 +87,19 @@ namespace ConsoleBattleships
         private static void DrawLowerBorder(Board board)
         {
             DrawBorder(board);
+        }
+
+
+        private static char SymbolFor(CellState state)
+        {
+            return state switch
+            {
+                CellState.Clear => ' ',
+                CellState.Hit => 'H',
+                CellState.Sunk => 'S',
+                CellState.Miss => 'M',
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
         }
     }
 }
