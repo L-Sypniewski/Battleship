@@ -112,7 +112,7 @@ namespace CoreTests.TestData.Services.Game
                         .Build(),
                     null)
             };
-            
+
             yield return new object[]
             {
                 new BoardBuilder()
