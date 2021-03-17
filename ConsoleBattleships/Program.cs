@@ -8,7 +8,8 @@ namespace ConsoleBattleships
 {
     internal class Program
     {
-        private const int MaxAttempts = 20;
+        private const int MaxAttempts = 20000;
+        private static BoardSize BoardSize => new(10,10);
 
 
         private static void Main(string[] args)
@@ -23,9 +24,7 @@ namespace ConsoleBattleships
 
         private static Game CreateGame()
         {
-            var shipConfiguration = new ShipConfiguration("Destroyer", 2, 2);
-            var shipConfigurations = new HashSet<ShipConfiguration>(new[] {shipConfiguration});
-            var boardSize = new BoardSize(3, 3);
+            var shipConfigurations = CreateShipConfigurations();
 
             var cellVerifier = new CellVerifier();
             var shipPositioner = new ShipPositioner(MaxAttempts, new ShipOrientationRandomizer(),
@@ -33,8 +32,17 @@ namespace ConsoleBattleships
                                                     new StandardBattleshipGameRulesCellVerifier());
             var boardInitializer = new BoardInitializer(shipPositioner, cellVerifier, MaxAttempts);
 
-            var game = new Game(boardSize, shipConfigurations, boardInitializer, new BoardVerifier());
+            var game = new Game(BoardSize, shipConfigurations, boardInitializer, new BoardVerifier());
             return game;
+        }
+
+
+        private static HashSet<ShipConfiguration> CreateShipConfigurations()
+        {
+            var battleshipConfiguration = new ShipConfiguration("Battleship", 5, 1);
+            var destroyerConfiguration = new ShipConfiguration("Destroyer", 4, 2);
+            var shipConfigurations = new HashSet<ShipConfiguration>(new[] {battleshipConfiguration, destroyerConfiguration});
+            return shipConfigurations;
         }
     }
 }
