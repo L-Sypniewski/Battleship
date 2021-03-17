@@ -20,6 +20,12 @@ project file should be passed:
 ```bash
 dotnet run --project <folder containing solution>/ConsoleBattleships/ConsoleBattleships.csproj 
 ```
+### Symbols used in the game 
+
+* Clear (cell have not been shot at) = `' '`
+* Hit ship => `H`
+* Sunk ship => `S`
+* Missed shot => `M`
 
 ### Known issues
 Sometimes to make the board appear in the console any key has to be pressed so that board is refreshed.
