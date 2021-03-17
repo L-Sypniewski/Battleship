@@ -86,7 +86,7 @@ namespace CoreTests.Services
 
 
         [Theory(DisplayName = "Correct GameMoveResult is returned after shooting")]
-        [ClassData(typeof(ShotAtClassData))]
+        [ClassData(typeof(ShootAtClassData))]
         public void Correct_GameMoveResult_is_returned_after_shooting(Board initialBoard, Cell cellToShot,
                                                                       GameMoveResult expectedGameMoveResult)
         {
@@ -113,7 +113,7 @@ namespace CoreTests.Services
 
 
         [Theory(DisplayName = "Exception is thrown if shot is made at already hit cell")]
-        [ClassData(typeof(ShotAtAlreadyShotCellClassData))]
+        [ClassData(typeof(ShootAtAlreadyShotCellClassData))]
         public void Exception_is_thrown_if_shot_is_made_at_already_hit_cell(Board initialBoard, Cell cellToShot)
         {
             Action act = () => _sut.ShootAt(initialBoard, cellToShot);
