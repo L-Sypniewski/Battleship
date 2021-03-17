@@ -90,8 +90,7 @@ namespace Core.Services
         private static IImmutableList<Cell> UpdatedCellsWithoutShips(Board oldBoard, Cell cellToShot)
         {
             var oldCells = oldBoard.CellsWithoutShips;
-            var cellToUpdate = oldCells.Single(cell => cell.XCoordinate == cellToShot.XCoordinate ||
-                                                       cell.YCoordinate == cellToShot.YCoordinate);
+            var cellToUpdate = oldCells.Single(cell => new CellIgnoringIsShotComparer().Equals(cell, cellToShot));
 
             if (cellToUpdate.IsShot)
             {
