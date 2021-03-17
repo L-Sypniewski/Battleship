@@ -99,10 +99,10 @@ namespace ConsoleBattleships.Services
             var hitShip = result.HitShip;
             if (hitShip != null)
             {
-                Console.WriteLine($"\nYou hit a Ship: {hitShip.Name}");
+                Console.WriteLine($"\nYou hit a Ship");
                 if (hitShip.IsSunk)
                 {
-                    Console.WriteLine("The ship is sunk");
+                    Console.WriteLine($"The ship of type {hitShip.Name} is sunk");
                 }
 
                 Console.WriteLine();
