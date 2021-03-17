@@ -35,7 +35,7 @@ namespace Core.Model
                 var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => CompareCellsWithoutIsShot(cell, cellToCheck));
                 if (cellWithoutShip is null)
                 {
-                    return Model.CellState.Clear;
+                    throw new ArgumentException("Cell to be checked does not belong to Board");
                 }
 
                 return cellWithoutShip.IsShot ? Model.CellState.Miss : Model.CellState.Clear;

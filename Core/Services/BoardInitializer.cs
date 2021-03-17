@@ -100,15 +100,14 @@ namespace Core.Services
 
         private Ship? CreateNewShip(Board board, string shipName, int shipSize, ImmutableArray<Ship> ships)
         {
-            var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipSize).ToImmutableArray();
+            var newShipPosition = _shipPositioner.ShipPositionsFor(board, shipSize);
             var updatedPositions = ships.SelectMany(ship => ship.Cells)
                                         .ToImmutableArray()
                                         .AddRange(newShipPosition);
 
             var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
-            var newShip = new Ship(shipName, newShipPosition);
-
-            return doShipsIntersectEachOther ? null : newShip;
+            
+            return doShipsIntersectEachOther ? null : new Ship(shipName, newShipPosition.ToImmutableArray());
         }
     }
 }
