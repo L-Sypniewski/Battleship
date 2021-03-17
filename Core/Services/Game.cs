@@ -34,9 +34,6 @@ namespace Core.Services
         }
 
 
-        public void EndGame() => throw new NotImplementedException();
-
-
         public bool IsFinished(Board board) => board.Ships.All(ship => ship.IsSunk);
 
 
