@@ -7,11 +7,15 @@ namespace ConsoleBattleships.Services
 {
     public sealed class InputToCellConverter : IInputToCellConverter
     {
-        public Cell? ConvertedFrom(string input)
+        public Cell? ConvertedFrom(string? input)
         {
+            if (input is null)
+            {
+                return null;
+            }
+
             const string regex = "^[Aa-zA-Z]{1}\\d{1,}$";
-            var inputIsSingleLetterFollowedByNumber =
-                Regex.IsMatch(input, regex, RegexOptions.Multiline);
+            var inputIsSingleLetterFollowedByNumber = Regex.IsMatch(input, regex, RegexOptions.Multiline);
 
             if (!inputIsSingleLetterFollowedByNumber)
             {
