@@ -112,6 +112,43 @@ namespace CoreTests.TestData.Services.Game
                         .Build(),
                     null)
             };
+            
+            yield return new object[]
+            {
+                new BoardBuilder()
+                    .WithShips(new[]
+                    {
+                        new ShipBuilder().WithName("qwerty!!")
+                                         .WithCells(new[]
+                                         {
+                                             new CellBuilder().WithCoordinates(0, 0).WithIsShot(true).Build()
+                                         }).Build()
+                    })
+                    .WithCellsWithoutShips(new[]
+                    {
+                        new CellBuilder().WithCoordinates(1, 0).Build(),
+                        new CellBuilder().WithCoordinates(2, 0).Build()
+                    })
+                    .Build(),
+                new CellBuilder().WithCoordinates(1, 0).Build(),
+                new GameMoveResult(
+                    new BoardBuilder()
+                        .WithShips(new[]
+                        {
+                            new ShipBuilder().WithName("qwerty!!")
+                                             .WithCells(new[]
+                                             {
+                                                 new CellBuilder().WithCoordinates(0, 0).WithIsShot(true).Build()
+                                             }).Build()
+                        })
+                        .WithCellsWithoutShips(new[]
+                        {
+                            new CellBuilder().WithCoordinates(1, 0).WithIsShot(true).Build(),
+                            new CellBuilder().WithCoordinates(2, 0).Build()
+                        })
+                        .Build(),
+                    null)
+            };
         }
 
 
