@@ -21,6 +21,15 @@ namespace CoreTests.TestData.Services.CellVerifier
             {
                 new[]
                 {
+                    new CellBuilder().WithCoordinates(0, 1).WithIsShot(true).Build(),
+                    new CellBuilder().WithCoordinates(0, 1).Build()
+                }
+            };
+
+            yield return new object[]
+            {
+                new[]
+                {
                     new CellBuilder().WithCoordinates(1, 0).Build(),
                     new CellBuilder().WithCoordinates(1, 0).Build()
                 }
@@ -43,6 +52,16 @@ namespace CoreTests.TestData.Services.CellVerifier
                     new CellBuilder().WithCoordinates(26, 3).Build(),
                     new CellBuilder().WithCoordinates(26, 4).Build(),
                     new CellBuilder().WithCoordinates(26, 3).Build()
+                }
+            };
+
+            yield return new object[]
+            {
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(26, 3).Build(),
+                    new CellBuilder().WithCoordinates(26, 4).Build(),
+                    new CellBuilder().WithCoordinates(26, 3).WithIsShot(true).Build()
                 }
             };
         }
