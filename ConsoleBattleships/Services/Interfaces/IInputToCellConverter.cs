@@ -4,6 +4,6 @@ namespace ConsoleBattleships.Services.Interfaces
 {
     public interface IInputToCellConverter
     {
-        Cell? ConvertedFrom(string input);
+        Cell? ConvertedFrom(string? input);
     }
 }
