@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using Core.Exceptions;
 using Core.Model;
+using Core.Utils;
 
 namespace Core.Services
 {
@@ -72,13 +73,7 @@ namespace Core.Services
             {
                 var allShips = oldBoard.Ships;
 
-                var shipWithCellToShot = shotShip with
-                {
-                    Cells = shotShip.Cells.Select(x => x with {IsShot = false}).ToImmutableArray()
-                };
-
-                var updatedCellsWithShips = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
-                var updatedShips = UpdatedShips(shipWithCellToShot, allShips, updatedCellsWithShips);
+                var updatedShips = UpdatedShips(shotShip, allShips);
                 return oldBoard with {Ships = updatedShips};
             }
 
@@ -97,22 +92,14 @@ namespace Core.Services
                 throw new CannotShotAlreadyShotCellException();
             }
 
-            var indexOfCellToUpdate = oldCells.IndexOf(cellToShot);
-            var cellsWithoutOld = oldCells.RemoveAt(indexOfCellToUpdate);
-            var updatedCells = cellsWithoutOld.Insert(indexOfCellToUpdate, cellToUpdate with {IsShot = true});
-            return updatedCells;
+            return oldCells.WithReplaced(cellToUpdate with {IsShot = true}, cell => cell == cellToShot);
         }
 
 
-        private static IImmutableList<Ship> UpdatedShips(Ship shipToBeUpdated,
-                                                         IImmutableList<Ship> allShips,
-                                                         IImmutableList<Cell> updatedCells)
+        private static IImmutableList<Ship> UpdatedShips(Ship updatedShip, IImmutableList<Ship> allShips)
         {
-            var updatedShip = shipToBeUpdated with {Cells = updatedCells};
-
-            var indexOfShipToUpdate = allShips.IndexOf(shipToBeUpdated);
-            var shipsWithRemovedShipToUpdate = allShips.Remove(shipToBeUpdated);
-            return shipsWithRemovedShipToUpdate.Insert(indexOfShipToUpdate, updatedShip);
+            return allShips.WithReplaced(updatedShip,
+                                         ship => ship.Cells.SequenceEqual(updatedShip.Cells, _cellEqualityComparer));
         }
 
 
