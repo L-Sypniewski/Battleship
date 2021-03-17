@@ -54,9 +54,14 @@ namespace Core.Services
         private static Ship? ShotShip(Board oldBoard, Cell cellToShot)
         {
             var shipWithCellToShot = ShipContaining(oldBoard.Ships, cellToShot);
+
             if (shipWithCellToShot is null)
             {
                 return null;
+            }
+            if (shipWithCellToShot.IsSunk)
+            {
+                throw new CannotShotAlreadyShotCellException();
             }
 
             var updatedCells = UpdatedCellsFrom(shipWithCellToShot, cellToShot);
@@ -64,22 +69,24 @@ namespace Core.Services
         }
 
 
-        private static Board UpdatedBoard(Board oldBoard, Cell cellToShot, Ship? shotShip)
+        private static Board UpdatedBoardIfShipWasShot(Board oldBoard, Ship shotShip)
         {
-            if (shotShip is not null)
-            {
-                var allShips = oldBoard.Ships;
+            var allShips = oldBoard.Ships;
 
-                var updatedShips = UpdatedShips(shotShip, allShips);
-                return oldBoard with {Ships = updatedShips};
-            }
-
-            var updatedCellsWithoutShips = UpdatedCellsWithoutShips(oldBoard, cellToShot);
-            return oldBoard with {CellsWithoutShips = updatedCellsWithoutShips};
+            var updatedShips = UpdatedShips(shotShip, allShips);
+            return oldBoard with {Ships = updatedShips};
         }
 
 
-        private static IImmutableList<Cell> UpdatedCellsWithoutShips(Board oldBoard, Cell cellToShot)
+        private static Board UpdatedBoard(Board oldBoard, Cell cellToShot, Ship? shotShip)
+        {
+            return shotShip == null
+                ? UpdatedBoardIfNoShipShot(oldBoard, cellToShot)
+                : UpdatedBoardIfShipWasShot(oldBoard, shotShip);
+        }
+
+
+        private static Board UpdatedBoardIfNoShipShot(Board oldBoard, Cell cellToShot)
         {
             var oldCells = oldBoard.CellsWithoutShips;
             var cellToUpdate = oldCells.Single(cell => new CellIgnoringIsShotComparer().Equals(cell, cellToShot));
@@ -89,7 +96,9 @@ namespace Core.Services
                 throw new CannotShotAlreadyShotCellException();
             }
 
-            return oldCells.WithReplaced(cellToUpdate with {IsShot = true}, cell => cell == cellToShot);
+            var updatedCells = oldCells.WithReplaced(cellToUpdate with {IsShot = true}, cell => cell == cellToShot);
+
+            return oldBoard with {CellsWithoutShips = updatedCells};
         }
 
 
