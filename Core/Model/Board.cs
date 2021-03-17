@@ -2,11 +2,11 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using Core.Exceptions;
 
 namespace Core.Model
 {
-    public sealed record Board(BoardSize Size, IImmutableList<Ship> Ships,
-                               IImmutableList<Cell> CellsWithoutShips)
+    public sealed record Board(BoardSize Size, IImmutableList<Ship> Ships, IImmutableList<Cell> CellsWithoutShips)
     {
         public IImmutableList<Cell> AllCells => Ships.SelectMany(ship => ship.Cells).Union(CellsWithoutShips).ToImmutableArray();
 
@@ -36,7 +36,7 @@ namespace Core.Model
                 var cellWithoutShip = CellsWithoutShips.SingleOrDefault(cell => CompareCellsWithoutIsShot(cell, cellToCheck));
                 if (cellWithoutShip is null)
                 {
-                    throw new ArgumentException("Cell to be checked does not belong to Board");
+                    throw new CannotCheckOutOfBoundsCellState();
                 }
 
                 return cellWithoutShip.IsShot ? Model.CellState.Miss : Model.CellState.Clear;
@@ -49,8 +49,7 @@ namespace Core.Model
                 return Model.CellState.Clear;
             }
 
-            var shipForACell =
-                Ships.Single(ship => ship.Cells.SingleOrDefault(cell => CompareCellsWithoutIsShot(cell, cellToCheck)) != null);
+            var shipForACell = Ships.Single(ship => ship.Cells.Any(cell => CompareCellsWithoutIsShot(cell, cellToCheck)));
 
             return shipForACell.IsSunk ? Model.CellState.Sunk : Model.CellState.Hit;
         }
