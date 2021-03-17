@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Core.Model;
+﻿using Core.Model;
 using CoreTests.TestUtils;
 using FluentAssertions;
 using Xunit;
@@ -31,7 +30,7 @@ namespace CoreTests.Model
                            .WithCells(new[]
                            {
                                new CellBuilder().WithCoordinates(0, 0).WithIsShot(true).Build(),
-                               new CellBuilder().WithCoordinates(1, 0).WithIsShot(true).Build(),
+                               new CellBuilder().WithCoordinates(1, 0).WithIsShot(true).Build()
                            }).Build();
 
             var hitShip = new ShipBuilder()
@@ -39,13 +38,13 @@ namespace CoreTests.Model
                           .WithCells(new[]
                           {
                               new CellBuilder().WithCoordinates(1, 1).WithIsShot(true).Build(),
-                              new CellBuilder().WithCoordinates(1, 2).Build(),
+                              new CellBuilder().WithCoordinates(1, 2).Build()
                           }).Build();
 
             var cellsWithoutShips = new[]
             {
                 new CellBuilder().WithCoordinates(0, 1).Build(),
-                new CellBuilder().WithCoordinates(0, 2).WithIsShot(true).Build(),
+                new CellBuilder().WithCoordinates(0, 2).WithIsShot(true).Build()
             };
             return new BoardBuilder().WithSize(boardSize)
                                      .WithShips(new[] {sunkShip, hitShip})

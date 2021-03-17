@@ -21,16 +21,17 @@ namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
                     },
                     new[]
                     {
-                        new CellBuilder().WithCoordinates(1,2).Build(),
-                        new CellBuilder().WithCoordinates(2,2).Build()
+                        new CellBuilder().WithCoordinates(1, 2).Build(),
+                        new CellBuilder().WithCoordinates(2, 2).Build()
                     }
                 },
-                new[] {
-                    new CellBuilder().WithCoordinates(1,0).Build(),
-                    new CellBuilder().WithCoordinates(2,0).Build(),
-                    new CellBuilder().WithCoordinates(1,1).Build(),
-                    new CellBuilder().WithCoordinates(2,1).Build(),
-                    new CellBuilder().WithCoordinates(0,2).Build()
+                new[]
+                {
+                    new CellBuilder().WithCoordinates(1, 0).Build(),
+                    new CellBuilder().WithCoordinates(2, 0).Build(),
+                    new CellBuilder().WithCoordinates(1, 1).Build(),
+                    new CellBuilder().WithCoordinates(2, 1).Build(),
+                    new CellBuilder().WithCoordinates(0, 2).Build()
                 }
             };
         }
