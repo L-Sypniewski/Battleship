@@ -15,7 +15,7 @@ namespace ConsoleBattleships
         private static void Main(string[] args)
         {
             var game = CreateGame();
-            var gameConsole = new GameConsole(new BoardDrawer(), game, new InputToCellConverter());
+            var gameConsole = new ConsoleGame(new BoardDrawer(), game, new InputToCellConverter());
 
             gameConsole.Play();
             Console.ReadKey();

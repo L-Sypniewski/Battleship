@@ -18,24 +18,12 @@ namespace Core.Services
                 throw new CellsNegativeCoordinatesException(errorMessage);
             }
 
-            var cellsWithXCoordinatesOutOfBounds = cellsArray.Where(cell => CellHasXCoordinateOutOfBoundsOf(boardSize, cell));
-            var cellsWithYCoordinatesOutOfBounds = cellsArray.Where(cell => CellHasYCoordinateOutOfBoundsOf(boardSize, cell));
+            var cellsWithXCoordinatesOutOfBounds = cellsArray.Where(cell => cell.XCoordinate >= boardSize.XSize);
+            var cellsWithYCoordinatesOutOfBounds = cellsArray.Where(cell => cell.YCoordinate >= boardSize.YSize);
 
             var outOfBoundsShips = cellsWithXCoordinatesOutOfBounds.Union(cellsWithYCoordinatesOutOfBounds).ToArray();
 
             return !outOfBoundsShips.Any();
-        }
-
-
-        private static bool CellHasXCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
-        {
-            return cell.XCoordinate >= boardSize.XSize;
-        }
-
-
-        private static bool CellHasYCoordinateOutOfBoundsOf(BoardSize boardSize, Cell cell)
-        {
-            return cell.YCoordinate >= boardSize.YSize;
         }
 
 
