@@ -1,6 +1,6 @@
 ﻿using Core.Model;
 
-namespace ConsoleBattleships.Services
+namespace ConsoleBattleships.Services.Interfaces
 {
     public interface IBoardDrawer
     {
