@@ -33,7 +33,7 @@ namespace ConsoleBattleships.Services
 
                 _boardDrawer.Draw(board);
 
-                var cellToShot = AskForCellToShotAt();
+                var cellToShot = AskForCellToShootAt();
 
                 Console.WriteLine();
 
@@ -56,7 +56,7 @@ namespace ConsoleBattleships.Services
         private static void DrawSeparator() => Console.WriteLine(new string('*', 10));
 
 
-        private Cell AskForCellToShotAt()
+        private Cell AskForCellToShootAt()
         {
             Console.WriteLine("Choose a cell to shoot at");
             do
@@ -89,7 +89,7 @@ namespace ConsoleBattleships.Services
 
                 Console.WriteLine($"{errorMessage}\nInvalid cell: {cellCoordinatesText}\n");
 
-                cellToShot = AskForCellToShotAt();
+                cellToShot = AskForCellToShootAt();
                 return MakeShot(ref cellToShot, board);
             }
         }
