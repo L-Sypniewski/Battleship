@@ -37,7 +37,7 @@ namespace ConsoleBattleships.Services
 
                 Console.WriteLine();
 
-                var shotResult = MakeShot(cellToShot, board);
+                var shotResult = MakeShot(ref cellToShot, board);
                 board = shotResult.UpdatedBoard;
 
                 PrintShotResult(shotResult, cellToShot);
@@ -73,7 +73,7 @@ namespace ConsoleBattleships.Services
         }
 
 
-        private GameMoveResult MakeShot(Cell cellToShot, Board board)
+        private GameMoveResult MakeShot(ref Cell cellToShot, Board board)
         {
             try
             {
@@ -88,8 +88,8 @@ namespace ConsoleBattleships.Services
 
                 Console.WriteLine($"{errorMessage}\nInvalid cell: {cellCoordinatesText}\n");
 
-                var newCellToShot = GetCellToShotAt();
-                return MakeShot(newCellToShot, board);
+                cellToShot = GetCellToShotAt();
+                return MakeShot(ref cellToShot, board);
             }
         }
 
