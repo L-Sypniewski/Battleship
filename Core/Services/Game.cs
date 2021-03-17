@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using Core.Exceptions;
@@ -10,12 +9,11 @@ namespace Core.Services
 {
     public sealed class Game : IGame
     {
+        private static readonly IEqualityComparer<Cell> _cellEqualityComparer = new CellIgnoringIsShotComparer();
         private readonly IBoardInitializer _boardInitializer;
         private readonly BoardSize _boardSize;
         private readonly IBoardVerifier _boardVerifier;
         private readonly ISet<ShipConfiguration> _shipConfigurations;
-
-        private static readonly IEqualityComparer<Cell> _cellEqualityComparer = new CellIgnoringIsShotComparer();
 
 
         public Game(BoardSize boardSize, ISet<ShipConfiguration> shipConfigurations,
@@ -59,6 +57,7 @@ namespace Core.Services
             {
                 return null;
             }
+
             if (shipWithCellToShot.IsSunk)
             {
                 throw new CannotShotAlreadyShotCellException();

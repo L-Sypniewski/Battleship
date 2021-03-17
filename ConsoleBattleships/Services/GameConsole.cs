@@ -9,8 +9,8 @@ namespace ConsoleBattleships.Services
 {
     public class GameConsole
     {
-        private readonly IGame _game;
         private readonly IBoardDrawer _boardDrawer;
+        private readonly IGame _game;
         private readonly IInputToCellConverter _inputToCellConverter;
 
 
@@ -36,7 +36,7 @@ namespace ConsoleBattleships.Services
                 var cellToShot = GetCellToShotAt();
 
                 Console.WriteLine();
-                
+
                 var shotResult = MakeShot(cellToShot, board);
                 board = shotResult.UpdatedBoard;
 

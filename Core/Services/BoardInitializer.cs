@@ -106,7 +106,7 @@ namespace Core.Services
                                         .AddRange(newShipPosition);
 
             var doShipsIntersectEachOther = _cellVerifier.CellsIntersect(updatedPositions);
-            
+
             return doShipsIntersectEachOther ? null : new Ship(shipName, newShipPosition.ToImmutableArray());
         }
     }
