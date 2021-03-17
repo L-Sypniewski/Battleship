@@ -3,3 +3,7 @@ checks:
   method-lines:
     config:
       threshold: 40
+exclude_patterns:
+  - "CoreTests/"
+  - "**/CoreTests/"
+  - "**/Exceptions/"
