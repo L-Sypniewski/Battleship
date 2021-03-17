@@ -2,7 +2,7 @@
 
 namespace ConsoleBattleships.Services.Interfaces
 {
-    internal interface IInputToCellConverter
+    public interface IInputToCellConverter
     {
         Cell? ConvertedFrom(string input);
     }

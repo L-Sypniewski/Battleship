@@ -18,8 +18,8 @@ namespace ConsoleBattleships.Services
                 return null;
             }
 
-            var columnIndex = input[0].ToString().ToColumnIndex();
-            var rowIndex = input[1];
+            var columnIndex = input[0].ToString().ToColumnIndex() - 1;
+            var rowIndex = int.Parse(input[1..]) - 1;
 
             return new Cell(columnIndex, rowIndex, false);
         }
