@@ -4,7 +4,7 @@ using CoreTests.TestUtils;
 
 namespace CoreTests.TestData.Services.Game
 {
-    public class ShotAtAlreadyShotCellClassData : IEnumerable<object[]>
+    public class ShootAtAlreadyShotCellClassData : IEnumerable<object[]>
     {
         public IEnumerator<object[]> GetEnumerator()
         {
