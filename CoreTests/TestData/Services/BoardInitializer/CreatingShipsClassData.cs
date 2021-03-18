@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Core.Model;
 using CoreTests.TestUtils;
 
-namespace CoreTests.TestData.Services.BoardVerifier.BoardInitializer
+namespace CoreTests.TestData.Services.BoardInitializer
 {
     public class CreatingShipsClassData : IEnumerable<object[]>
     {
