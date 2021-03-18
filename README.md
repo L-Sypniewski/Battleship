@@ -9,20 +9,20 @@ Assuming the command is run from the root repository folder:
 ```bash
 dotnet build
 ```
-If command is run outside the root folder:
+If the command is run outside the root folder:
 ```bash
 dotnet build <folder containing solution>/Battleship.sln
 ```
 
 ### Running the project
-To run a project `dotnet run` command needs to be executed. As a parameter path do `ConsoleBattleships`
-project file should be passed:
+To run a project `dotnet run` command needs to be executed. Path to `ConsoleBattleships`
+project file should be passed as a parameter:
 ```bash
 dotnet run --project <folder containing solution>/ConsoleBattleships/ConsoleBattleships.csproj 
 ```
 ### Symbols used in the game 
 
-* Clear (cell have not been shot at) = `' '`
+* Clear (cell have not been shot at) => `' '`
 * Hit ship => `H`
 * Sunk ship => `S`
 * Missed shot => `M`
