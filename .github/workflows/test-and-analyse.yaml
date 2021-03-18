@@ -1,4 +1,4 @@
-﻿name: Test-and-analyze
+name: Test-and-analyze
 on:
   push:
 jobs:
@@ -18,22 +18,29 @@ jobs:
       - name: Test
         run: |
           if [ "$RUNNER_OS" == "Linux" ]; then
-            dotnet test --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura,lcov  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Model/*.cs" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Exceptions/*.cs"  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SkipAutoProps="True"
+            mkdir ${{github.workspace}}/coverage
+            dotnet test CoreTests/CoreTests.csproj --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Model/*.cs" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Exceptions/*.cs"  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SkipAutoProps="True"
+            mv $(find  /home/runner/work/Battleship/Battleship/CoreTests/ -name "*coverage.cobertura.xml") "${{github.workspace}}/coverage/coverage-core.cobertura.xml"
+            dotnet test ConsoleBattleshipsTests/ConsoleBattleshipsTests.csproj --no-restore --collect:"XPlat Code Coverage" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Model/*.cs" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.ExcludeByFile="**/Exceptions/*.cs"  -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.SkipAutoProps="True"
+            mv $(find . -name "*coverage.cobertura.xml") "${{github.workspace}}/coverage/coverage-console.cobertura.xml"
            else
             dotnet test --no-restore
           fi
         shell: bash
-      - name: Move coverage files to a known location
+      - name: Merge coverages
         if: matrix.os == 'ubuntu-latest'
-        run: |
-          mkdir ${{github.workspace}}/coverage
-          mv $(find . -name "*coverage.cobertura.xml") ${{github.workspace}}/coverage/coverage.cobertura.xml
-          mv $(find . -name "*coverage.info") ${{github.workspace}}/coverage/coverage.info
+        uses: danielpalme/ReportGenerator-GitHub-Action@4.8.7
+        with:
+          reports: "${{github.workspace}}/coverage/coverage-core.cobertura.xml;${{github.workspace}}/coverage/coverage-console.cobertura.xml" # REQUIRED # The coverage reports that should be parsed (separated by semicolon). Globbing is supported.
+          targetdir: "${{github.workspace}}/coverage-merged" # REQUIRED # The directory where the generated report should be saved.
+          reporttypes: 'Cobertura;lcov' # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
+          sourcedirs: '' # Optional directories which contain the corresponding source code (separated by semicolon). The source directories are used if coverage report contains classes without path information.
+          tag: '${{ github.run_number }}_${{ github.run_id }}' # Optional tag or build version.
       - name: Cache coverage
         if: matrix.os == 'ubuntu-latest'
         uses: actions/cache@v2
         with:
-          path: ${{github.workspace}}/coverage
+          path: ${{github.workspace}}/coverage-merged
           key: ${{ github.sha }}-coverage
   upload-coverage:
     needs: build-and-test
@@ -45,17 +52,19 @@ jobs:
       - name: Restore coverage from cache
         uses: actions/cache@v2
         with:
-          path: ${{github.workspace}}/coverage
+          path: ${{github.workspace}}/coverage-merged
           key: ${{ github.sha }}-coverage
+      - name: Print merged
+        run: "echo $(ls ${{github.workspace}}/coverage-merged)"
       - name: Publish code coverage to CodeClimate
         uses: paambaati/codeclimate-action@v2.7.5
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CODE_CLIMATE_REPORTER_ID }}
         with:
           coverageLocations: |
-            ${{github.workspace}}/coverage/coverage.cobertura.xml:cobertura
+            ${{github.workspace}}/coverage-merged/lcov.info:lcov
       - name: Publish code coverage to Coveralls
         uses: coverallsapp/github-action@v1.0.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{github.workspace}}/coverage/coverage.info
+          path-to-lcov: ${{github.workspace}}/coverage-merged/lcov.info
