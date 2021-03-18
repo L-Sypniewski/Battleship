@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Core.Exceptions;
 using Core.Model;
 using Core.Services;
-using CoreTests.TestData.Services.BoardVerifier.BoardInitializer;
+using CoreTests.TestData.Services.BoardInitializer;
 using CoreTests.TestUtils;
 using FluentAssertions;
 using Moq;
