@@ -5,7 +5,7 @@ namespace Core.Model
 {
     /// <summary>
     ///     Ship configuration used by <see cref="IBoardInitializer" /> to initialize a board.
-    ///     Two configuraions for the same <see cref="Name" /> and <see cref="ShipSize" /> are considered equal
+    ///     Two configurations for the same <see cref="Name" /> and <see cref="ShipSize" /> are considered equal
     /// </summary>
     public sealed record ShipConfiguration(string Name, int ShipSize, int ShipsNumber)
     {
