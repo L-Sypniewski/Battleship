@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoreTests", "CoreTests\Core
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleBattleships", "ConsoleBattleships\ConsoleBattleships.csproj", "{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleBattleshipsTests", "ConsoleBattleshipsTests\ConsoleBattleshipsTests.csproj", "{7CBA7E4F-8A8F-4502-91DC-533C628877A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,5 +60,17 @@ Global
 		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x64.Build.0 = Release|Any CPU
 		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x86.ActiveCfg = Release|Any CPU
 		{E9480DCD-8ABD-412A-AE30-21B2A8151AF2}.Release|x86.Build.0 = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|x64.Build.0 = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Debug|x86.Build.0 = Debug|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|x64.ActiveCfg = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|x64.Build.0 = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|x86.ActiveCfg = Release|Any CPU
+		{7CBA7E4F-8A8F-4502-91DC-533C628877A6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
